@@ -63,7 +63,7 @@ METHOD | ENDPOINT         | TOKEN | ROLE| DESCRIPTION              | POST PARAMS
 GET   | /test/     | YES     | | Get all tests           | -  | `tests`
 GET   | /test/:id     | YES     | | Get One test        | -  | `test`
 POST   | /test/     | YES     | Admin |Create a test         | `questions`  | `test`
-POST   | /test/:id     | YES     | Submit answers        | `answers`  | `results`
+POST   | /test/:id     | YES     | | Submit answers        | `answers`  | `results`
 PUT   | /test/:id     | YES     | Admin |Update test             | -  | `test`
 DELETE  | /test/:id     | YES     | Admin |Delete test            | -  | `Test deleted`
 
