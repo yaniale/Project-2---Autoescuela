@@ -49,13 +49,13 @@ PUT   | /topic/:id     | YES     | Update topic              | -  | `topic`
 DELETE  | /topic/:id     | YES     | Delete topic              | -  | `Topic deleted`
 
 ### Practice Endpoints
-METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS                                     | RETURNS
--------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
-GET   | /practice/     | YES     | Get all practices           | -  | `practices`
-GET   | /practice/    | YES     | Get One practice by student Name         | query: search String  | `practice`
-GET   | /practice/    | YES     | Get One practice by Date         | query: search Date  | `practice`
-POST   | /practice/     | YES     | Create a practice         | `student`, `startTime`, `finishTime`, `date`, `startKm`, `finishKm`, `comments`, `signature` | `practice`
-PUT   | /topic/:id     | YES     | Update practice              | -  | `practice updated`
+METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | PARAMS                                     | RETURNS
+-------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
+GET   | /practice/     | YES     | Admin |Get all practices           | -  | `practices`
+GET   | /practice/    | YES     | Admin / Teacher | Get One practice by student Name         | query: search String  | `practice`
+GET   | /practice/    | YES     | Admin / Teacher | Get One practice by Date         | query: search Date  | `practice`
+POST   | /practice/     | YES     | |Create a practice         | `student`, `startTime`, `finishTime`, `date`, `startKm`, `finishKm`, `comments`, `signature` | `practice`
+PUT   | /practice/:id     | YES     | |Update practice              | -  | `practice updated`
 
 ### Test Endpoints
 METHOD | ENDPOINT         | TOKEN | ROLE| DESCRIPTION              | POST PARAMS                                     | RETURNS
