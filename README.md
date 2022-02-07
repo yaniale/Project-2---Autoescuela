@@ -43,7 +43,7 @@ DELETE   | /staff/:staffId/messages/:id     | YES     | Delete Message          
 METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS                                     | RETURNS
 -------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
 GET   | /topic/     | YES     | Get all topics           | -  | `topics`
-GET   | /topic/     | YES     | Get One topic          | query: search String  | `topic`
+GET   | /topic/:id     | YES     | Get One topic          | query: search String  | `topic`
 POST   | /topic/     | YES     | Create a Topic         | `title`, `content`  | `topic`
 PUT   | /topic/:id     | YES     | Update topic              | -  | `topic`
 DELETE  | /topic/:id     | YES     | Delete topic              | -  | `Topic deleted`
@@ -52,8 +52,8 @@ DELETE  | /topic/:id     | YES     | Delete topic              | -  | `Topic del
 METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS                                     | RETURNS
 -------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
 GET   | /practice/     | YES     | Get all practices           | -  | `practices`
-GET   | /practice/    | YES     | Get One practice by student Name         | query: search String  | `practice`
-GET   | /practice/    | YES     | Get One practice by Date         | query: search Date  | `practice`
+GET   | /practice/:date    | YES     | Get One practice by Date         | query: search Date  | `practice`
+GET   | /practice/student/:studentId    | YES     | Get One practice by student        | query: search String  | `practice`
 POST   | /practice/     | YES     | Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
 PUT   | /topic/:id     | YES     | Update practice              | -  | `practice updated`
 DELETE   | /topic/:id     | YES     | Delete practice              | -  | `practice deleted`
