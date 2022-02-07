@@ -58,14 +58,14 @@ POST   | /practice/     | YES     | Create a practice         | `student`, `star
 PUT   | /topic/:id     | YES     | Update practice              | -  | `practice updated`
 
 ### Test Endpoints
-METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | POST PARAMS                                     | RETURNS
--------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
-GET   | /test/     | YES     | Get all tests           | -  | `tests`
-GET   | /test/:id     | YES     | Get One test        | -  | `test`
-POST   | /test/     | YES     | Create a test         | `questions`  | `test`
+METHOD | ENDPOINT         | TOKEN | ROLE| DESCRIPTION              | POST PARAMS                                     | RETURNS
+-------|------------------|-------|-----|--------------------------|-------------------------------------------------|--------------------
+GET   | /test/     | YES     | | Get all tests           | -  | `tests`
+GET   | /test/:id     | YES     | | Get One test        | -  | `test`
+POST   | /test/     | YES     | Admin |Create a test         | `questions`  | `test`
 POST   | /test/:id     | YES     | Submit answers        | `answers`  | `results`
-PUT   | /test/:id     | YES     | Update test             | -  | `test`
-DELETE  | /test/:id     | YES     | Delete test            | -  | `Test deleted`
+PUT   | /test/:id     | YES     | Admin |Update test             | -  | `test`
+DELETE  | /test/:id     | YES     | Admin |Delete test            | -  | `Test deleted`
 
 ### Question Endpoints
 METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | POST PARAMS                                     | RETURNS
