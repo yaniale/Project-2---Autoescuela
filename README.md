@@ -69,10 +69,11 @@ DELETE  | /test/:id     | YES     | Admin |Delete test            | -  | `Test d
 
 ### Question Endpoints
 METHOD | ENDPOINT         | TOKEN |ROLE| DESCRIPTION              | PARAMS                                     | RETURNS
--------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
+-------|------------------|-------|----|--------------------------|-------------------------------------------------|--------------------
 GET   | /question/     | YES     | Admin | Get all questions           | -  | `questions`
 GET   | /question/:id/     | YES     | Admin | Get one question           | -  | `question`
+GET   | /question/      | YES | Admin | Get questions by topic      | query: search string  | `questions`
 POST   | /question/     | YES     | Admin | Create a question        | `text`, `picture`, `answer`, `wrong`, `topic` | `question`
 PUT   | /question/:id     | YES     | Admin |Update a question            | -  | `question`
 DELETE  | /question/:id     | YES     | Admin |Delete a question            | -  | `Question deleted`
-GET   | /question/      | YES | Admin | Get questions by topic      | query: search string  | `questions`
+
