@@ -56,6 +56,7 @@ GET   | /practice/    | YES     | Get One practice by student Name         | que
 GET   | /practice/    | YES     | Get One practice by Date         | query: search Date  | `practice`
 POST   | /practice/     | YES     | Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
 PUT   | /topic/:id     | YES     | Update practice              | -  | `practice updated`
+DELETE   | /topic/:id     | YES     | Delete practice              | -  | `practice deleted`
 
 ### Test Endpoints
 METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | POST PARAMS                                     | RETURNS
