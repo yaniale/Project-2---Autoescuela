@@ -54,7 +54,7 @@ METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS           
 GET   | /practice/     | YES     | Get all practices           | -  | `practices`
 GET   | /practice/    | YES     | Get One practice by student Name         | query: search String  | `practice`
 GET   | /practice/    | YES     | Get One practice by Date         | query: search Date  | `practice`
-POST   | /practice/     | YES     | Create a practice         | `student`, `startTime`, `finishTime`, `date`, `startKm`, `finishKm`, `comments`, `signature` | `practice`
+POST   | /practice/     | YES     | Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
 PUT   | /topic/:id     | YES     | Update practice              | -  | `practice updated`
 
 ### Test Endpoints
