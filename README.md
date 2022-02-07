@@ -40,10 +40,10 @@ POST   | /staff/:staffId/messages     | YES     | Send Message              | `t
 DELETE   | /staff/:staffId/messages/:id     | YES     | Delete Message              |`messageId`   | Message deleted
 
 ### Topic Endpoints
-METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | POST PARAMS                                     | RETURNS
+METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS                                     | RETURNS
 -------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
 GET   | /topic/     | YES     | Get all topics           | -  | `topics`
-GET   | /topic/:id     | YES     | Get One topic          | -  | `topic`
+GET   | /topic/     | YES     | Get One topic          | query: search String  | `topic`
 POST   | /topic/     | YES     | Create a Topic         | `title`, `content`  | `topic`
 PUT   | /topic/:id     | YES     | Update topic              | -  | `topic`
 DELETE  | /topic/:id     | YES     | Delete topic              | -  | `Topic deleted`
