@@ -27,6 +27,9 @@ DELETE  | /student/:id     | YES     | Delete student             | -  | `studen
 GET   | /student/:studentId/messages     | YES     | Check Messages            | - | messages
 POST   | /student/:studentId/messages     | YES     | Send Message              | `text`, `toTeacher`  | Message sent to `toTeacher.email`
 DELETE   | /student/:studentId/messages/:id     | YES     | Delete Message              |`messageId`   | Message deleted
+GET   | /student/:studentId/practice   | YES     | Get practices by student        | query: search String  | `practice`
+GET   | /student/:studentId/practice/:id   | YES     | Get one practice for a student        | query: search String  | `practice`
+POST   | /student/:studentId/practice/     | YES     | Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
 
 ### Staff Endpoints
 METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | POST PARAMS                                     | RETURNS
@@ -38,24 +41,26 @@ DELETE  | /staff/:id     | YES     | Delete employee              | -  | `Employ
 GET   | /staff/:staffId/messages     | YES     | Check Messages            | - | messages
 POST   | /staff/:staffId/messages     | YES     | Send Message              | `text`, `toStudent`  | Message sent to `toStudent.email`
 DELETE   | /staff/:staffId/messages/:id     | YES     | Delete Message              |`messageId`   | Message deleted
+GET  | /staff/:staffId/practice  | YES    | Get all practices for a teacher       | query: search String  | `practice`
+GET  | /staff/:staffId/practice/:id  | YES    | Get one practice for a teacher       | query: search String  | `practice`
 
 ### Topic Endpoints
 METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS                                     | RETURNS
 -------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
 GET   | /topic/     | YES     | Get all topics           | -  | `topics`
-GET   | /topic/     | YES     | Get One topic          | query: search String  | `topic`
+GET   | /topic/:id     | YES     | Get One topic          | query: search String  | `topic`
 POST   | /topic/     | YES     | Create a Topic         | `title`, `content`  | `topic`
 PUT   | /topic/:id     | YES     | Update topic              | -  | `topic`
 DELETE  | /topic/:id     | YES     | Delete topic              | -  | `Topic deleted`
 
 ### Practice Endpoints
-METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | PARAMS                                     | RETURNS
--------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
-GET   | /practice/     | YES     | Admin |Get all practices           | -  | `practices`
-GET   | /practice/    | YES     | Admin / Teacher | Get One practice by student Name         | query: search String  | `practice`
-GET   | /practice/    | YES     | Admin / Teacher | Get One practice by Date         | query: search Date  | `practice`
-POST   | /practice/     | YES     | |Create a practice         | `student`, `startTime`, `finishTime`, `date`, `startKm`, `finishKm`, `comments`, `signature` | `practice`
-PUT   | /practice/:id     | YES     | |Update practice              | -  | `practice updated`
+
+METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS                                     | RETURNS
+-------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
+GET   | /practice/:date    | YES     | Get practices by Date         | query: search Date  | `practice`
+PUT   | /practice/:id     | YES     | Update practice              | -  | `practice updated`
+DELETE   | /practice/:id     | YES     | Delete practice              | -  | `practice deleted`
+
 
 ### Test Endpoints
 METHOD | ENDPOINT         | TOKEN | ROLE| DESCRIPTION              | POST PARAMS                                     | RETURNS
