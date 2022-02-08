@@ -28,10 +28,8 @@ try  {
     .use(cors())
     .use(morgan('dev'))
     .use(express.json())
-    //.use('/api', require('./api/routes'))
-    .use('/', (req, res) => {
-      res.send('Welcome to autoLessons API')
-    })
+    .use('/api', require('./api/routes'))
+  
     .listen(process.env.PORT, () => {
       console.info('💻 Reboot Server Live')
       console.info(`📡 PORT: http://localhost:${process.env.PORT}`)
