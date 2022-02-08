@@ -36,7 +36,7 @@ POST   | /usert/:userId/practice/     | YES     | Create a practice         | `s
 METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS                                     | RETURNS
 -------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
 GET   | /topic/     | YES     | Get all topics           | -  | `topics`
-GET   | /topic/:id     | YES     | Get One topic          | query: search String  | `topic`
+GET   | /topic/    | YES     | Get One topic          | query: search String  | `topic`
 POST   | /topic/     | YES     | Create a Topic         | `title`, `content`  | `topic`
 PUT   | /topic/:id     | YES     | Update topic              | -  | `topic`
 DELETE  | /topic/:id     | YES     | Delete topic              | -  | `Topic deleted`
@@ -45,7 +45,7 @@ DELETE  | /topic/:id     | YES     | Delete topic              | -  | `Topic del
 
 METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS                                     | RETURNS
 -------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
-GET   | /practice/:date    | YES     | Get practices by Date         | query: search Date  | `practice`
+GET   | /practice/    | YES     | Get practices         | query: search Date  | `practice`
 PUT   | /practice/:id     | YES     | Update practice              | -  | `practice updated`
 DELETE   | /practice/:id     | YES     | Delete practice              | -  | `practice deleted`
 
@@ -69,4 +69,3 @@ GET   | /question/      | YES | Admin | Get questions by topic      | query: sea
 POST   | /question/     | YES     | Admin | Create a question        | `text`, `picture`, `answer`, `wrong`, `topic` | `question`
 PUT   | /question/:id     | YES     | Admin |Update a question            | -  | `question`
 DELETE  | /question/:id     | YES     | Admin |Delete a question            | -  | `Question deleted`
-
