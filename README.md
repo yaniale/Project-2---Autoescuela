@@ -52,8 +52,8 @@ DELETE  | /topic/:id     | YES     | Delete topic              | -  | `Topic del
 METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS                                     | RETURNS
 -------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
 GET   | /practice/     | YES     | Get all practices           | -  | `practices`
-GET   | /practice/:date    | YES     | Get One practice by Date         | query: search Date  | `practice`
-GET   | /practice/student/:studentId    | YES     | Get One practice by student        | query: search String  | `practice`
+GET   | /practice/:date    | YES     | Get practices by Date         | query: search Date  | `practice`
+GET   | /practice/student/:studentId    | YES     | Get practices by student        | query: search String  | `practice`
 POST   | /practice/     | YES     | Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
 PUT   | /topic/:id     | YES     | Update practice              | -  | `practice updated`
 DELETE   | /topic/:id     | YES     | Delete practice              | -  | `practice deleted`
