@@ -54,27 +54,31 @@ PUT   | /topic/:id     | YES     | Update topic              | -  | `topic`
 DELETE  | /topic/:id     | YES     | Delete topic              | -  | `Topic deleted`
 
 ### Practice Endpoints
+
 METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS                                     | RETURNS
 -------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
 GET   | /practice/:date    | YES     | Get practices by Date         | query: search Date  | `practice`
 PUT   | /practice/:id     | YES     | Update practice              | -  | `practice updated`
 DELETE   | /practice/:id     | YES     | Delete practice              | -  | `practice deleted`
 
+
 ### Test Endpoints
-METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | POST PARAMS                                     | RETURNS
--------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
-GET   | /test/     | YES     | Get all tests           | -  | `tests`
-GET   | /test/:id     | YES     | Get One test        | -  | `test`
-POST   | /test/     | YES     | Create a test         | `questions`  | `test`
-POST   | /test/:id     | YES     | Submit answers        | `answers`  | `results`
-PUT   | /test/:id     | YES     | Update test             | -  | `test`
-DELETE  | /test/:id     | YES     | Delete test            | -  | `Test deleted`
+METHOD | ENDPOINT         | TOKEN | ROLE| DESCRIPTION              | POST PARAMS                                     | RETURNS
+-------|------------------|-------|-----|--------------------------|-------------------------------------------------|--------------------
+GET   | /test/     | YES     | | Get all tests           | -  | `tests`
+GET   | /test/:id     | YES     | | Get One test        | -  | `test`
+POST   | /test/     | YES     | Admin |Create a test         | `questions`  | `test`
+POST   | /test/:id     | YES     | | Submit answers        | `answers`  | `results`
+PUT   | /test/:id     | YES     | Admin |Update test             | -  | `test`
+DELETE  | /test/:id     | YES     | Admin |Delete test            | -  | `Test deleted`
 
 ### Question Endpoints
-METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | POST PARAMS                                     | RETURNS
--------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
-GET   | /question/     | YES     | Get all questions           | -  | `questions`
-GET   | /question/:id/     | YES     | Get one question           | -  | `question`
-POST   | /question/     | YES     | Create a question        | `text`, `picture`, `answer`, `wrong`, `topic` | `question`
-PUT   | /question/:id     | YES     | Update a question            | -  | `question`
-DELETE  | /question/:id     | YES     | Delete a question            | -  | `Question deleted`
+METHOD | ENDPOINT         | TOKEN |ROLE| DESCRIPTION              | PARAMS                                     | RETURNS
+-------|------------------|-------|----|--------------------------|-------------------------------------------------|--------------------
+GET   | /question/     | YES     | Admin | Get all questions           | -  | `questions`
+GET   | /question/:id/     | YES     | Admin | Get one question           | -  | `question`
+GET   | /question/      | YES | Admin | Get questions by topic      | query: search string  | `questions`
+POST   | /question/     | YES     | Admin | Create a question        | `text`, `picture`, `answer`, `wrong`, `topic` | `question`
+PUT   | /question/:id     | YES     | Admin |Update a question            | -  | `question`
+DELETE  | /question/:id     | YES     | Admin |Delete a question            | -  | `Question deleted`
+
