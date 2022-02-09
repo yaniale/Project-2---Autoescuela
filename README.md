@@ -12,42 +12,42 @@ The Authentication flow for the application is:
 
 - Step 1. User Signup/Login
 
-METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | POST PARAMS                                     | RETURNS
--------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
-POST   | /auth/signup     | YES    |User Signup              | `name`, `lastName`, `email`, `password`, `address`, `dni`, `expireDate`,`birthDate`, `phone`  | `token`
-POST   | /auth/login      | -     | User Login               | `email`, `password`                             | `token`
+METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | POST PARAMS                                     | RETURNS
+-------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
+POST   | /auth/signup     | YES   | Admin| |User Signup              | `name`, `lastName`, `email`, `password`, `address`, `dni`, `expireDate`,`birthDate`, `phone`  | `token`
+POST   | /auth/login      | -     | |User Login               | `email`, `password`                             | `token`
 
 ### User Endpoints
-METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | POST PARAMS                                     | RETURNS
--------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
-GET   | /user/     | YES     | Get all users            | -  | `profile`
-GET   | /user/:id     | YES     | Get one user            | -  | `profilet`
-PUT   | /user/:id     | YES     | Update user            | -  | `profile`
-DELETE  | /user/:id     | YES     | Delete user             | -  | `student deleted`
-GET   | /user/:userId/messages     | YES     | Check Messages            | - | messages
-POST   | /user/:userId/messages     | YES     | Send Message              | `text`, `toTeacher`  | Message sent to `toTeacher.email`
-DELETE   | /usert/:userId/messages/:id     | YES     | Delete Message              |`messageId`   | Message deleted
-GET   | /user/:userId/practice   | YES     | Get all practices by userId        | query: search String  | `practice`
-GET   | /user/:userId/practice/:id   | YES     | Get one practice for a userId        | query: search String  | `practice`
-POST   | /usert/:userId/practice/     | YES     | Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
+METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | POST PARAMS                                     | RETURNS
+-------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
+GET   | /user/     | YES     | Admin, Teacher |Get all users            | -  | `profile`
+GET   | /user/:id     | YES     | Admin, Teacher | Get one user            | -  | `profilet`
+PUT   | /user/:id     | YES     | |Update user            | -  | `profile`
+DELETE  | /user/:id     | YES     | Admin |Delete user             | -  | `student deleted`
+GET   | /user/:userId/messages     | YES     | | Check Messages            | - | messages
+POST   | /user/:userId/messages     | YES    | | Send Message              | `text`, `toTeacher`  | Message sent to `toTeacher.email`
+DELETE   | /usert/:userId/messages/:id     | YES    | | Delete Message              |`messageId`   | Message deleted
+GET   | /user/:userId/practice   | YES    | | Get all practices by userId        | query: search String  | `practice`
+GET   | /user/:userId/practice/:id   | YES   |  | Get one practice for a userId        | query: search String  | `practice`
+POST   | /usert/:userId/practice/     | YES   | Student | Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
 
 
 ### Topic Endpoints
-METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS                                     | RETURNS
--------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
-GET   | /topic/     | YES     | Get all topics           | -  | `topics`
-GET   | /topic/    | YES     | Get One topic          | query: search String  | `topic`
-POST   | /topic/     | YES     | Create a Topic         | `title`, `content`  | `topic`
-PUT   | /topic/:id     | YES     | Update topic              | -  | `topic`
-DELETE  | /topic/:id     | YES     | Delete topic              | -  | `Topic deleted`
+METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | PARAMS                                     | RETURNS
+-------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
+GET   | /topic/     | YES     | |Get all topics           | -  | `topics`
+GET   | /topic/    | YES     | |Get One topic          | query: search String  | `topic`
+POST   | /topic/     | YES     | Admin|Create a Topic         | `title`, `content`  | `topic`
+PUT   | /topic/:id     | YES     | Admin |Update topic              | -  | `topic`
+DELETE  | /topic/:id     | YES     | Admin |Delete topic              | -  | `Topic deleted`
 
 ### Practice Endpoints
 
-METHOD | ENDPOINT         | TOKEN | DESCRIPTION              | PARAMS                                     | RETURNS
--------|------------------|-------|--------------------------|-------------------------------------------------|--------------------
-GET   | /practice/    | YES     | Get practices         | query: search Date  | `practice`
-PUT   | /practice/:id     | YES     | Update practice              | -  | `practice updated`
-DELETE   | /practice/:id     | YES     | Delete practice              | -  | `practice deleted`
+METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | PARAMS                                     | RETURNS
+-------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
+GET   | /practice/    | YES   | Admin  | Get all practices         | query: search Date  | `practice`
+PUT   | /practice/:id     | YES   | Admin / Teacher | Update practice              | -  | `practice updated`
+DELETE   | /practice/:id     | YES     | | Delete practice              | -  | `practice deleted`
 
 
 ### Test Endpoints
