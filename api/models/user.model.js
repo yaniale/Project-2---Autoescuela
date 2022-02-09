@@ -41,11 +41,11 @@ const userSchema = new mongoose.Schema({
   // photo: {
   //   type: String
   // },
-  // role: {
-  //   type: String,
-  //   enum: ['admin', 'teacher', 'student'],
-  //   required: [true, 'Role is required']
-  // }
+  role: {
+    type: String,
+    enum: ['admin', 'teacher', 'student'],
+    required: [true, 'Role is required']
+  }
 })
 
 const UserModel = mongoose.model('user', userSchema)
