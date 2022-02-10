@@ -28,6 +28,8 @@ try  {
     .use(cors())
     .use(morgan('dev'))
     .use(express.json())
+    .use(express.urlencoded())
+    .use(express.static('public'))
     .use('/api', require('./api/routes'))
   
     .listen(process.env.PORT, () => {
