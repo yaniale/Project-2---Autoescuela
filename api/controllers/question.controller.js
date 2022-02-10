@@ -3,7 +3,7 @@ const TopicModel = require('../models/topic.model')
 
 async function getAllQuestions(req, res) {
   try {
-    const questions = await QuestionModel.find()
+    const questions = await QuestionModel.find(req.query)
     res.status(200).json(questions)
   } catch (error) {
     res.status(500).send(`Request error: ${error}`)

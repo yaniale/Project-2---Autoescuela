@@ -1,7 +1,7 @@
 const mongoose = require ('mongoose')
 
 const testSchema = new mongoose.Schema({
-  test: [{
+  questions: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'question',
     unique: [true, 'Question already added']
@@ -18,3 +18,5 @@ const testSchema = new mongoose.Schema({
 })
 
 const testModel = mongoose.model('test', testSchema)
+
+module.exports = testModel
