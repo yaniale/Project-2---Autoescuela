@@ -23,7 +23,7 @@ METHOD | ENDPOINT         | TOKEN |ROLE| DESCRIPTION              | POST PARAMS 
 GET   | /user/     | YES     |Admin/Teacher|Get all users            | -  | `profile`
 GET   | /user/:id     | YES    | | Get one user            | -  | `profilet`
 PUT   | /user/:id     | YES     || Update user            | -  | `profile`
-DELETE  | /user/:id     | YES    Admin| | Delete user             | -  | `student deleted`
+DELETE  | /user/:id     | YES  |  Admin|  Delete user             | -  | `student deleted`
 GET   | /user/:userId/messages     | YES   |  | Check Messages            | - | messages
 POST   | /user/:userId/messages     | YES  |   | Send Message              | `text`, `toTeacher`  | Message sent to `toTeacher.email`
 DELETE   | /usert/:userId/messages/:id |    | YES     | Delete Message              |`messageId`   | Message deleted
