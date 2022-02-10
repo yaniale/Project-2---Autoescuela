@@ -12,9 +12,7 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Answer is required']
   },
-  options: [{
-    type: String
-  }],
+  options: [{}],      
   topic: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'topic'
