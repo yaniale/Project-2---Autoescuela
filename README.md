@@ -26,7 +26,7 @@ PUT   | /user/:id     | YES     || Update user            | -  | `profile`
 DELETE  | /user/:id     | YES  |  Admin|  Delete user             | -  | `student deleted`
 GET   | /user/:userId/messages     | YES   |  | Check Messages            | - | messages
 POST   | /user/:userId/messages     | YES  |   | Send Message              | `text`, `toTeacher`  | Message sent to `toTeacher.email`
-DELETE   | /usert/:userId/messages/:id |    | YES     | Delete Message              |`messageId`   | Message deleted
+DELETE   | /usert/:userId/messages/:id |YES|     | Delete Message              |`messageId`   | Message deleted
 GET   | /user/:userId/practice   | YES  |   | Get all practices by userId        | query: search String  | `practice`
 GET   | /user/:userId/practice/:id   | YES  |   | Get one practice for a userId        | query: search String  | `practice`
 POST   | /usert/:userId/practice/     | YES |Student| Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
