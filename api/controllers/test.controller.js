@@ -47,11 +47,11 @@ async function submitTest(req, res) {
       for(let i = 0; i < submit.length; i++) {
         if (submit[i] === answers[i]) {
           test.correct++
-        } else {
+        } else if (submit[i] === '') { 
           test.answered--
         }
       }
-      test.percentage = (test.answered / answers.length)*100
+      test.percentage = (test.correct / answers.length)*100
       res.status(200).json({ correct: test.correct, answered: test.answered, percentage: test.percentage })
       
     })
