@@ -24,12 +24,13 @@ GET   | /user/     | YES     | Admin, Teacher |Get all users            | -  | `
 GET   | /user/:id     | YES     | Admin, Teacher | Get one user            | -  | `profilet`
 PUT   | /user/:id     | YES     | |Update user            | -  | `profile`
 DELETE  | /user/:id     | YES     | Admin |Delete user             | -  | `student deleted`
-GET   | /user/:userId/messages     | YES     | | Check Messages            | - | messages
-POST   | /user/:userId/messages     | YES    | | Send Message              | `text`, `toTeacher`  | Message sent to `toTeacher.email`
-DELETE   | /usert/:userId/messages/:id     | YES    | | Delete Message              |`messageId`   | Message deleted
-GET   | /user/:userId/practice   | YES    | | Get all practices by userId        | query: search String  | `practice`
-GET   | /user/:userId/practice/:id   | YES   |  | Get one practice for a userId        | query: search String  | `practice`
-POST   | /usert/:userId/practice/     | YES   | Student | Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
+GET   | /user/profile/messages     | YES     | | Check Messages            | - | messages
+POST   | /user/profile/messages     | YES    | | Send Message              | `text`, `toTeacher`  | Message sent to `toTeacher.email`
+DELETE   | /user/profile/messages/:id     | YES    | | Delete Message              |`messageId`   | Message deleted
+GET   | /user/profile/practice   | YES    | | Get all practices by userId        | query: search String  | `practice`
+GET   | /user/profile/practice/:id   | YES   |  | Get one practice for a userId        | query: search String  | `practice`
+POST   | /user/profile/practice/     | YES   | Student | Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
+DELETE   /user/profile/practice/:id     | YES   | Student | Delete own practice         |  | `practice`
 
 
 ### Topic Endpoints
