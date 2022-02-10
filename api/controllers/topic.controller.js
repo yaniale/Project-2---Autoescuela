@@ -13,7 +13,7 @@ async function getOneTopic(req, res) {
   try {
     const topic = await TopicModel.findById(req.params.id)
     if(!topic) return res.status(400).send('Topic not found')
-    res.status(200).sendFile(topic.content, {root: 'content'})
+    res.status(200).sendFile(topic.content, {root: 'public/content'})
   } catch (error) {
     res.status(500).send(`Request error: ${error}`)
   }
