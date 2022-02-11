@@ -23,20 +23,20 @@ async function getOneUser(req, res) {
 async function getStatistics(req, res) {
   try {
     const user = await UserModel.findById(req.params.id)
-    if ( user.id !== res.locals.id && res.locals.user.role === 'student' ) {
+    if ( user.id !== res.locals.user.id && res.locals.user.role === 'student' ) {
       return res.status(500).send('Access denied')
     }
     const statistics = user.studentData.statistics
-    console.log(statistics)
     const topics = statistics.map(async element => {
       const topic = await topicModel.findById(element.topic)
-      return topic.title
+      return {title: topic.title, number: topic.topicNumber }
     })
     Promise.all(topics).then(names => {
       const result = []
       names.forEach((name, index) => {
-        result.push({ topic: name, correct: statistics[index].correct, answered: statistics[index].answered, percentage: statistics[index].percentage })
+        result.push({ topic: name.title, number:name.number,  correct: statistics[index].correct, answered: statistics[index].answered, percentage: statistics[index].percentage })
       })
+      result.sort((a,b) => a.number - b.number)
       res.status(200).json(result)
     })
   } catch (error) {
