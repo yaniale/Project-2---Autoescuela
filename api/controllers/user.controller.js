@@ -14,7 +14,7 @@ async function getAllUsers(req, res) {
 async function getOneUser(req, res) {
   try {
     const user = await UserModel.findById(req.params.id, { password: 0 })
-    res.send(200).json(user)
+    res.status(200).json(user)
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
   }

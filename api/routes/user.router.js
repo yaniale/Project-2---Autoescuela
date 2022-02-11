@@ -2,7 +2,9 @@ const router = require('express').Router()
 
 const {
   checkAuth,
-  checkStudent
+  checkStudent,
+  checkAdmin,
+  checkTeacher
 } = require ('../utils')
 
 const {
@@ -13,11 +15,10 @@ const {
   createPractice
 } = require ('../controllers/user.controller')
 
-router.get('/', getAllUsers)
-router.get('/:id', getOneUser)
-router.put('/:id', updateUser)
-router.delete('/:id', deleteUser)
+router.get('/', checkAuth, checkTeacher, getAllUsers)
+router.get('/:id',checkAuth, getOneUser)
+router.put('/:id', checkAuth, updateUser)
+router.delete('/:id', checkAuth, checkAdmin, deleteUser)
 router.post('/profile/practice', checkAuth, checkStudent, createPractice)
-
 
 module.exports = router

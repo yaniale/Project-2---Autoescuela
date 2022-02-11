@@ -37,7 +37,7 @@ DELETE   /user/profile/practice/:id     | YES   | Student | Delete own practice 
 METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | PARAMS                                     | RETURNS
 -------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
 GET   | /topic/     | YES     | |Get all topics           | -  | `topics`
-GET   | /topic/    | YES     | |Get One topic          | query: search String  | `topic`
+GET   | /topic/:id    | YES     | |Get One topic          |   | `topic`
 POST   | /topic/     | YES     | Admin|Create a Topic         | `title`, `content`  | `topic`
 PUT   | /topic/:id     | YES     | Admin |Update topic              | -  | `topic`
 DELETE  | /topic/:id     | YES     | Admin |Delete topic              | -  | `Topic deleted`
