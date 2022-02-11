@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 
+const statisticsSchema = require('./statistics.model')
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -63,7 +65,8 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 1
       }
-    }]
+    }],
+    statistics: [statisticsSchema]
   }
 })
 

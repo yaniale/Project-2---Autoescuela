@@ -22,13 +22,13 @@ async function getOneTest(req, res) {
           const question = { question: element.text, image: img, options: element.options }
           list.push(question)
         }
-        test.questions.forEach( element => {
+        test.questions.forEach(element => {
           getImage(element)
         })
       })
-      Promise.all(list).then(result => {
-        res.status(200).json(result)
-      })
+    Promise.all(list).then(result => {
+      res.status(200).json(result)
+    })
   } catch (error) {
     res.status(500).send(`Request error: ${error}`)
   }
@@ -45,6 +45,7 @@ async function createTest(req, res) {
 
 async function submitTest(req, res) {
   try {
+    const user = res.locals.user
     await TestModel.findById(req.params.id)
       .populate('questions')
       .then(test => {
@@ -56,33 +57,59 @@ async function submitTest(req, res) {
         })
         const ansText = test.questions.map(element => { //answer text
           const i = element.options.findIndex(option => {
-            if ( Object.keys(option)[0] === element.answer) { return true }
+            if (Object.keys(option)[0] === element.answer) { return true }
           })
           return element.options[i][element.answer]
+        })
+        const topics = test.questions.map(element => {
+          return element.topic
         })
         const submit = Object.values(req.body)  //Submitted answers
         test.answered = submit.length
         const results = []
         for (let i = 0; i < submit.length; i++) {
-          if (submit[i] === answers[i]) {
+          if (submit[i] === answers[i]) {                                                                               //Resp. correcta
             test.correct++
-            results.push(`Question ${i+1} - '${text[i]}': Correct! Your answer was ${answers[i]} - '${ansText[i]}'.`)
-          } else if (submit[i] === '') {
+            results.push(`Question ${i + 1} - '${text[i]}': Correct! Your answer was ${answers[i]} - '${ansText[i]}'.`)
+            const index = user.studentData.statistics.findIndex(object => { //Buscar dentro de las estadísticas si se han respondido preguntas de este topic previamente
+              if (object.topic.toString() === topics[i].toString()) { return true }
+            })
+            if (index === -1) {
+              user.studentData.statistics.push({ topic: topics[i] })
+              user.studentData.statistics[user.studentData.statistics.length-1].correct++
+              user.studentData.statistics[user.studentData.statistics.length-1].answered++
+              user.studentData.statistics[user.studentData.statistics.length-1].percentage = (user.studentData.statistics[user.studentData.statistics.length-1].correct / user.studentData.statistics[user.studentData.statistics.length-1].answered) * 100
+            } else {
+              user.studentData.statistics[index].correct++
+              user.studentData.statistics[index].answered++
+              user.studentData.statistics[index].percentage = (user.studentData.statistics[index].correct / user.studentData.statistics[index].answered) * 100
+            }
+          } else if (submit[i] === '') {                                                                                  //Resp. en blanco
             test.answered--
-            results.push(`Question ${i+1} - '${text[i]}': The correct answer was ${answers[i]} - '${ansText[i]}'.`)
-          } else {
-            results.push(`Question ${i+1} - '${text[i]}': The correct answer was ${answers[i]} - '${ansText[i]}'.`)
+            results.push(`Question ${i + 1} - '${text[i]}': The correct answer was ${answers[i]} - '${ansText[i]}'.`)
+          } else {                                                                                                        //Resp. errónea
+            results.push(`Question ${i + 1} - '${text[i]}': The correct answer was ${answers[i]} - '${ansText[i]}'.`)
+            const index = user.studentData.statistics.findIndex(object => { //Buscar dentro de las estadísticas si se han respondido preguntas de este topic previamente
+              if (object.topic.toString() === topics[i].toString()) { return true }
+            })
+            if (index === -1) {
+              user.studentData.statistics.push({ topic: topics[i] })
+              user.studentData.statistics[user.studentData.statistics.length-1].answered++
+              user.studentData.statistics[user.studentData.statistics.length-1].percentage = (user.studentData.statistics[user.studentData.statistics.length-1].correct / user.studentData.statistics[user.studentData.statistics.length-1].answered) * 100
+            } else {
+              user.studentData.statistics[index].answered++
+              user.studentData.statistics[index].percentage = (user.studentData.statistics[index].correct / user.studentData.statistics[index].answered) * 100
+            }
           }
         }
-        const user = res.locals.user
         const index = user.studentData.testsDone.findIndex(object => { //Buscar dentro de los tests realizados por el alumno si ya había hecho este test antes
           if (object.id.toString() === req.params.id) { return true }
         })
         if (index === -1) {
           user.studentData.testsDone.push({ id: req.params.id }) //Si no se había hecho el test antes, añadirlo a los test realizados
-          user.studentData.testsDone[user.studentData.testsDone.length-1].maxScore = test.correct //establecemos la puntación obtenida como maxScore
+          user.studentData.testsDone[user.studentData.testsDone.length - 1].maxScore = test.correct //establecemos la puntación obtenida como maxScore
         } else {  //en caso de que el test ya se haya realizado previamente
-          test.correct > user.studentData.testsDone[index].maxScore ?  user.studentData.testsDone[index].maxScore = test.correct : user //modificar puntuación máxima si se ha superado
+          test.correct > user.studentData.testsDone[index].maxScore ? user.studentData.testsDone[index].maxScore = test.correct : user //modificar puntuación máxima si se ha superado
           user.studentData.testsDone[index].tries++// aumentar número de intentos
         }
         user.save()

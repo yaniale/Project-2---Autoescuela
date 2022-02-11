@@ -19,6 +19,5 @@ const addressSchema = new mongoose.Schema({
     type: Number,
   }
 })
-const AddressModel = mongoose.model('address', addressSchema)
 
-module.exports = AddressModel
+module.exports = AddressSchema
