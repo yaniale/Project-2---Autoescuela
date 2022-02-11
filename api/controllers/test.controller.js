@@ -70,7 +70,7 @@ async function submitTest(req, res) {
         for (let i = 0; i < submit.length; i++) {
           if (submit[i] === answers[i]) {                                                                               //Resp. correcta
             test.correct++
-            results.push(`Question ${i + 1} - '${text[i]}': Correct! Your answer was ${answers[i]} - '${ansText[i]}'.`)
+            results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `Correct! Your answer was ${answers[i]} - '${ansText[i]}'.` })
             const index = user.studentData.statistics.findIndex(object => { //Buscar dentro de las estadísticas si se han respondido preguntas de este topic previamente
               if (object.topic.toString() === topics[i].toString()) { return true }
             })
@@ -86,9 +86,9 @@ async function submitTest(req, res) {
             }
           } else if (submit[i] === '') {                                                                                  //Resp. en blanco
             test.answered--
-            results.push(`Question ${i + 1} - '${text[i]}': The correct answer was ${answers[i]} - '${ansText[i]}'.`)
+            results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `The correct answer was ${answers[i]} - '${ansText[i]}'.` })
           } else {                                                                                                        //Resp. errónea
-            results.push(`Question ${i + 1} - '${text[i]}': The correct answer was ${answers[i]} - '${ansText[i]}'.`)
+            results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `The correct answer was ${answers[i]} - '${ansText[i]}'.` })
             const index = user.studentData.statistics.findIndex(object => { //Buscar dentro de las estadísticas si se han respondido preguntas de este topic previamente
               if (object.topic.toString() === topics[i].toString()) { return true }
             })

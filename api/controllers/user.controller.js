@@ -34,7 +34,7 @@ async function getStatistics(req, res) {
     Promise.all(topics).then(names => {
       const result = []
       names.forEach((name, index) => {
-        result.push({ topic: name.title, number:name.number,  correct: statistics[index].correct, answered: statistics[index].answered, percentage: statistics[index].percentage })
+        result.push({ number:name.number, topic: name.title,  correct: statistics[index].correct, answered: statistics[index].answered, percentage: statistics[index].percentage })
       })
       result.sort((a,b) => a.number - b.number)
       res.status(200).json(result)

@@ -31,7 +31,6 @@ GET   | /user/:userId/practice   | YES    | | Get all practices by userId       
 GET   | /user/:userId/practice/:id   | YES   |  | Get one practice for a userId        | query: search String  | `practice`
 POST   | /usert/:userId/practice/     | YES   | Student | Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
 
-
 ### Topic Endpoints
 METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | PARAMS                                     | RETURNS
 -------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
