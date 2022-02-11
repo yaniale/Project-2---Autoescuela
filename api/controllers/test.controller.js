@@ -1,7 +1,6 @@
 const imageToBase64 = require('image-to-base64')
 
 const TestModel = require('../models/test.model')
-const UserModel = require('../models/user.model')
 
 async function getAllTests(req, res) {
   try {
@@ -49,32 +48,42 @@ async function submitTest(req, res) {
     await TestModel.findById(req.params.id)
       .populate('questions')
       .then(test => {
-        const answers = test.questions.map(element => {
+        const answers = test.questions.map(element => { //correct answers
           return element.answer
         })
-        const submit = Object.values(req.body)
+        const text = test.questions.map(element => { //question text
+          return element.text
+        })
+        const ansText = test.questions.map(element => { //answer text
+          const i = element.options.findIndex(option => {
+            if ( Object.keys(option)[0] === element.answer) { return true }
+          })
+          return element.options[i][element.answer]
+        })
+        const submit = Object.values(req.body)  //Submitted answers
         test.answered = submit.length
         const results = []
         for (let i = 0; i < submit.length; i++) {
           if (submit[i] === answers[i]) {
             test.correct++
-            results.push(`${Object.keys(req.body)[i]}: Correct!`)
+            results.push(`Question ${i+1} - '${text[i]}': Correct! Your answer was ${answers[i]} - '${ansText[i]}'.`)
           } else if (submit[i] === '') {
             test.answered--
-            results.push(`${Object.keys(req.body)[i]}: The correct answer was ${answers[i]}`)
+            results.push(`Question ${i+1} - '${text[i]}': The correct answer was ${answers[i]} - '${ansText[i]}'.`)
           } else {
-            results.push(`${Object.keys(req.body)[i]}: The correct answer was ${answers[i]}`)
+            results.push(`Question ${i+1} - '${text[i]}': The correct answer was ${answers[i]} - '${ansText[i]}'.`)
           }
         }
         const user = res.locals.user
-        const index = user.studentData.testsDone.findIndex(object => {
-          if (object.id.toString() === req.params.id) { return true}
+        const index = user.studentData.testsDone.findIndex(object => { //Buscar dentro de los tests realizados por el alumno si ya había hecho este test antes
+          if (object.id.toString() === req.params.id) { return true }
         })
         if (index === -1) {
           user.studentData.testsDone.push({ id: req.params.id }) //Si no se había hecho el test antes, añadirlo a los test realizados
+          user.studentData.testsDone[user.studentData.testsDone.length-1].maxScore = test.correct //establecemos la puntación obtenida como maxScore
         } else {  //en caso de que el test ya se haya realizado previamente
-          test.correct > user.studentData.testsDone[index].maxScore ?  user.studentData.testsDone[index].maxScore = test.correct : //modificar puntuación máxima si se ha superado
-          user.studentData.testsDone[index].tries = user.studentData.testsDone[index].tries++ // aumentar número de intentos
+          test.correct > user.studentData.testsDone[index].maxScore ?  user.studentData.testsDone[index].maxScore = test.correct : user //modificar puntuación máxima si se ha superado
+          user.studentData.testsDone[index].tries++// aumentar número de intentos
         }
         user.save()
         test.percentage = (test.correct / answers.length) * 100
