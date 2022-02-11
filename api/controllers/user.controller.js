@@ -22,8 +22,8 @@ async function getOneUser(req, res) {
 
 async function getStatistics(req, res) {
   try {
-    const user = res.locals.user
-    if ( user.id !== req.params.id && user.role === 'student' ) {
+    const user = await UserModel.findById(req.params.id)
+    if ( user.id !== res.locals.id && res.locals.user.role === 'student' ) {
       return res.status(500).send('Access denied')
     }
     const statistics = user.studentData.statistics
