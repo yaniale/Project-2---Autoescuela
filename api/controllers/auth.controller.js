@@ -9,7 +9,7 @@ async function signup(req, res) {
     req.body.password = hash
 
     const user = await UserModel.create(req.body)
-    res.status(200).json(user)
+    res.status(200).json({message: `${user.name}'s profile successfully created!`, user})
   } catch (error) {
     res.status(500).send('Error creating user')
   }

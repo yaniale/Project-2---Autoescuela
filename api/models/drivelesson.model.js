@@ -21,7 +21,7 @@ const driveLessonSchema = new mongoose.Schema({
     enum: ["09:00", "10:00","11:00","12:00","13:00","16:00","17:00","18:00"],
   },
   finishTime: {
-    type: Number,
+    type: String,
   },
   date: {
     type: Date,

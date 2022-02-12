@@ -92,7 +92,7 @@ async function createPractice(req, res) {
     const teacher = student.studentData.teacher
     const bookedPractices = await DriveLessonModel.find({ date: req.body.date, bookSlot: req.body.bookSlot, teacher: teacher })
     if (bookedPractices.length === 0) {
-      const lesson = {student: student.id, teacher: teacher, date: req.body.date, bookSlot: req.body.bookSlot}
+      const lesson = { student: student.id, teacher: teacher, date: req.body.date, bookSlot: req.body.bookSlot }
       const practice = await DriveLessonModel.create(lesson)
       student.studentData.driveLessons.lessons.push(practice.id)
       student.save()
@@ -118,6 +118,21 @@ async function getMyPractices(req, res) {
   }
 }
 
+async function deleteMyPractice(req, res) {
+  try {
+    const practice = await DriveLessonModel.findById(req.params.id)
+    if (practice.finishTime) {
+      res.status(200).send('Practice cannot be deleted!')
+    } else {
+      await DriveLessonModel.findByIdAndRemove(req.params.id)
+      res.status(200).send('Practice deleted successfully!')
+    }
+  } catch (error) {
+    res.status(500).send(`Request Error: ${error}`)
+
+  }
+}
+
 module.exports = {
   getAllUsers,
   getOneUser,
@@ -127,5 +142,6 @@ module.exports = {
   getMyProfile,
   updateMyProfile,
   createPractice,
-  getMyPractices
+  getMyPractices,
+  deleteMyPractice
 }
