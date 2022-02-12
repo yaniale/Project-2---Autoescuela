@@ -12,11 +12,13 @@ const driveLessonSchema = new mongoose.Schema({
     required: true
   },
   bookSlot: {
-    type: Number,
+    type: String,
+    enum: ["09:00", "10:00","11:00","12:00","13:00","16:00","17:00","18:00"],
     required: [true, 'You have to select a time slot']
   },
   startTime: {
-    type: Number,
+    type: String,
+    enum: ["09:00", "10:00","11:00","12:00","13:00","16:00","17:00","18:00"],
   },
   finishTime: {
     type: Number,
