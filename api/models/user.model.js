@@ -66,7 +66,40 @@ const userSchema = new mongoose.Schema({
         default: 1
       }
     }],
-    statistics: [statisticsSchema]
+    statistics: [statisticsSchema],
+    driveLessons: {
+      tries: {
+        type: Number,
+        default: 0
+      },
+      paidLessons: {
+        type: Number,
+        default: 0
+      },
+      lessons: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'driveLesson'
+      }]
+    },
+    teacher: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user'
+      //validar que el role sea teacher
+    }
+  },
+  teacherData: {
+    drivingLic: {
+      type: String
+    },
+    students: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user'
+      //validar que el role sea student
+    }],
+    lessons: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'driveLesson'
+    }]
   }
 })
 

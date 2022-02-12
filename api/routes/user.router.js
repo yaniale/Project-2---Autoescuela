@@ -14,6 +14,7 @@ const {
   updateUser,
   deleteUser,
   getMyProfile,
+  updateMyProfile,
   createPractice,
   getMyPractices
 } = require ('../controllers/user.controller')
@@ -21,9 +22,10 @@ const {
 router.get('/', checkAuth, checkTeacher, getAllUsers)
 router.get('/:id',checkAuth, getOneUser)
 router.get('/:id/statistics', checkAuth, getStatistics)
-router.put('/:id', checkAuth, updateUser)
+router.put('/:id', checkAuth, checkAdmin, updateUser)
 router.delete('/:id', checkAuth, checkAdmin, deleteUser)
 router.get('/profile/:id', checkAuth, getMyProfile)
+router.patch('/profile/:id', checkAuth, updateMyProfile)
 router.post('/profile/:id/practice', checkAuth, checkStudent, createPractice)
 router.get('/profile/:id/practice', checkAuth, checkStudent, getMyPractices)
 
