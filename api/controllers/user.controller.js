@@ -2,6 +2,8 @@ const UserModel = require('../models/user.model')
 const topicModel = require('../models/topic.model')
 const DriveLessonModel = require('../models/drivelesson.model')
 
+const bcrypt = require('bcrypt')
+
 async function getAllUsers(req, res) {
   try {
     const users = await UserModel.find({}, { password: 0 })
@@ -47,7 +49,7 @@ async function getStatistics(req, res) {
 async function updateUser(req, res) {
   try {
     const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, { password: 0 })
-    if (req.body.studentData.hasOwnProperty('teacher')) {
+    if (user.role !== 'admin' && req.body.studentData.hasOwnProperty('teacher')) {
       const teacher = await UserModel.findById(req.body.studentData.teacher)
       teacher.teacherData.students.push(req.params.id)
       teacher.save()
@@ -85,16 +87,39 @@ async function updateMyProfile(req, res) {
   }
 }
 
+function getProfilePhoto(req, res) {
+  try {
+    const photo = res.locals.user.photo
+    if(!photo) return res.status(400).send('No profile photo')
+    res.status(200).sendFile(photo, {root: 'public/profile-photos'})
+  } catch (error) {
+    res.status(500).send(`Request error: ${error}`)
+  }
+}
+
+function getMedCertificate(req, res) {
+  try {
+    const cert = res.locals.user.studentData.medCert
+    if(!cert) return res.status(400).send('No Medical Certificate')
+    res.status(200).sendFile(cert, {root: 'public/med-certs'})
+  } catch (error) {
+    res.status(500).send(`Request error: ${error}`)
+  }
+}
+
 async function createPractice(req, res) {
   try {
     const student = res.locals.user
     const teacher = student.studentData.teacher
+
     const bookedPractices = await DriveLessonModel.find({ date: req.body.date, bookSlot: req.body.bookSlot, teacher: teacher })
     if (bookedPractices.length === 0) {
       const lesson = { student: student.id, teacher: teacher, date: req.body.date, bookSlot: req.body.bookSlot }
       const practice = await DriveLessonModel.create(lesson)
+
       student.studentData.driveLessons.lessons.push(practice.id)
       student.save()
+
       const teacherUser = await UserModel.findById(teacher)
       teacherUser.teacherData.lessons.push(practice.id)
       teacherUser.save()
@@ -112,6 +137,22 @@ async function getMyPractices(req, res) {
   try {
     const myPractices = await DriveLessonModel.find({ student: res.locals.user.id })
     res.status(200).json(myPractices)
+  } catch (error) {
+    res.status(500).send(`Request Error: ${error}`)
+  }
+}
+
+async function changePassword(req, res) {
+  try {
+    const user = res.locals.user
+    bcrypt.compare(req.body.currentPassword, user.password, (err, result) => {
+      if (err) return res.status(500).send(err)
+      if (!result) return res.status(500).send('Incorrect password. Unable to change.')
+
+      user.password = bcrypt.hashSync(req.body.newPassword, 10)
+      user.save()
+      res.status(200).send(`Your password has been changed`)
+    })
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
   }
@@ -151,7 +192,10 @@ module.exports = {
   deleteUser,
   getMyProfile,
   updateMyProfile,
+  getProfilePhoto,
+  getMedCertificate,
   createPractice,
   getMyPractices,
+  changePassword,
   deleteMyPractice
 }
