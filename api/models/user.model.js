@@ -40,9 +40,9 @@ const userSchema = new mongoose.Schema({
   //   type: Number,
   //   required: [true, 'Phone is required']
   // },
-  // photo: {
-  //   type: String
-  // },
+  photo: {
+    type: String
+  },
   role: {
     type: String,
     enum: ['admin', 'teacher', 'student'],
