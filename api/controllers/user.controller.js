@@ -53,7 +53,6 @@ async function updateUser(req, res) {
       teacher.save()
     }
     res.status(200).json({ message: `${user.name}'s profile updated!`, user })
-
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
   }
@@ -92,7 +91,7 @@ async function createPractice(req, res) {
     const teacher = student.studentData.teacher
     const bookedPractices = await DriveLessonModel.find({ date: req.body.date, bookSlot: req.body.bookSlot, teacher: teacher })
     if (bookedPractices.length === 0) {
-      const lesson = {student: student.id, teacher: teacher, date: req.body.date, bookSlot: req.body.bookSlot}
+      const lesson = { student: student.id, teacher: teacher, date: req.body.date, bookSlot: req.body.bookSlot }
       const practice = await DriveLessonModel.create(lesson)
       student.studentData.driveLessons.lessons.push(practice.id)
       student.save()
@@ -100,7 +99,7 @@ async function createPractice(req, res) {
       teacherUser.teacherData.lessons.push(practice.id)
       teacherUser.save()
 
-      res.status(200).json(practice)
+      res.status(200).json({ message: `You've booked a driving lesson!`, practice })
     } else {
       res.send('The teacher is busy!!')
     }
@@ -118,6 +117,32 @@ async function getMyPractices(req, res) {
   }
 }
 
+async function deleteMyPractice(req, res) {
+  try {
+    const practice = await DriveLessonModel.findById(req.params.id)
+    const user = res.locals.user.id
+    if (user !== practice.student.toString()) {
+      return res.send('User not authorized!')
+    }
+
+    const today = new Date(Date.now()).getTime()  // getTime devuelve la hora en milisegundos
+    const practiceDate = practice.date.getTime()
+    const resultTime = (practiceDate - today) / 1000 / 60 / 60 // convertimos los milisegundos en horas
+
+    if (practice.finishTime) {
+      res.status(200).send('Practice already done and cannot be deleted!')
+
+    } else if (resultTime < 24) {
+      res.status(200).send('Too late to cancel your lesson!')
+    } else {
+      await DriveLessonModel.findByIdAndRemove(req.params.id)
+      res.status(200).send('Practice deleted successfully!')
+    }
+  } catch (error) {
+    res.status(500).send(`Request Error: ${error}`)
+  }
+}
+
 module.exports = {
   getAllUsers,
   getOneUser,
@@ -127,5 +152,6 @@ module.exports = {
   getMyProfile,
   updateMyProfile,
   createPractice,
-  getMyPractices
+  getMyPractices,
+  deleteMyPractice
 }
