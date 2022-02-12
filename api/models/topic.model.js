@@ -8,6 +8,11 @@ const topicSchema = new mongoose.Schema ({
   },
   content: {
     type: String
+  },
+  topicNumber: {
+    type: Number,
+    required: [true, 'Topic Number is required'],
+    unique: [true, 'Another Topic already has this number']
   }
 })
 

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 
+const statisticsSchema = require('./statistics.model')
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -45,6 +47,26 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['admin', 'teacher', 'student'],
     required: [true, 'Role is required']
+  },
+  studentData: {
+    medCert: {
+      type: String,
+    },
+    testsDone: [{
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'test'
+      },
+      maxScore: {
+        type: Number,
+        default: 0
+      },
+      tries: {
+        type: Number,
+        default: 1
+      }
+    }],
+    statistics: [statisticsSchema]
   }
 })
 

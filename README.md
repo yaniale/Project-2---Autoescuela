@@ -32,7 +32,6 @@ GET   | /user/profile/practice/:id   | YES   |  | Get one practice for a userId 
 POST   | /user/profile/practice/     | YES   | Student | Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
 DELETE |  /user/profile/practice/:id     | YES   | Student | Delete own practice         |  | `practice`
 
-
 ### Topic Endpoints
 METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | PARAMS                                     | RETURNS
 -------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
