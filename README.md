@@ -30,7 +30,7 @@ DELETE   | /user/profile/messages/:id     | YES    | | Delete Message           
 GET   | /user/profile/practice   | YES    | | Get all practices by userId        | query: search String  | `practice`
 GET   | /user/profile/practice/:id   | YES   |  | Get one practice for a userId        | query: search String  | `practice`
 POST   | /user/profile/practice/     | YES   | Student | Create a practice         | `student`, `startTime`, `finishTime`, `date` | `practice`
-DELETE   /user/profile/practice/:id     | YES   | Student | Delete own practice         |  | `practice`
+DELETE |  /user/profile/practice/:id     | YES   | Student | Delete own practice         |  | `practice`
 
 
 ### Topic Endpoints
