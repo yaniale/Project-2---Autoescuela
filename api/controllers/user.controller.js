@@ -120,6 +120,11 @@ async function getMyPractices(req, res) {
 async function deleteMyPractice(req, res) {
   try {
     const practice = await DriveLessonModel.findById(req.params.id)
+    const user = res.locals.user.id
+    if (user !== practice.student.toString()) {
+      return res.send('User not authorized!')
+    }
+
     const today = new Date(Date.now()).getTime()  // getTime devuelve la hora en milisegundos
     const practiceDate = practice.date.getTime()
     const resultTime = (practiceDate - today) / 1000 / 60 / 60 // convertimos los milisegundos en horas

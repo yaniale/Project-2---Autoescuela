@@ -1,13 +1,12 @@
 const DriveLessonModel = require('../models/drivelesson.model')
 
 async function getAllPractices(req, res) {
-  console.log(res.locals.user.role)
   try {
     if (res.locals.user.role === 'teacher') {
       const teacherPractices = await DriveLessonModel.find({ teacher: res.locals.user.id })
       res.status(200).json(teacherPractices)
     } else if (res.locals.user.role === 'admin') {
-      const practices = await DriveLessonModel.find()
+      const practices = await DriveLessonModel.find(req.query)
       res.status(200).json(practices)
     }
   } catch (error) {
