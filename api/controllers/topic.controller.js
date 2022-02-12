@@ -3,6 +3,7 @@ const TopicModel = require('../models/topic.model')
 async function getAllTopics(req, res) {
   try {
     const topics = await TopicModel.find()
+    topics.sort((a,b) => a.topicNumber - b.topicNumber)
     res.status(200).json(topics)
   } catch (error) {
     res.status(500).send(`Request error: ${error}`)

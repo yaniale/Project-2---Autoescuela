@@ -1,5 +1,4 @@
 const UserModel = require('../models/user.model')
-const TopicMocel = require('../models/topic.model')
 const topicModel = require('../models/topic.model')
 
 async function getAllUsers(req, res) {
@@ -34,7 +33,7 @@ async function getStatistics(req, res) {
     Promise.all(topics).then(names => {
       const result = []
       names.forEach((name, index) => {
-        result.push({ number:name.number, topic: name.title,  correct: statistics[index].correct, answered: statistics[index].answered, percentage: statistics[index].percentage })
+        result.push({ number:name.number, topic: name.title, correct: statistics[index].correct, answered: statistics[index].answered, percentage: statistics[index].percentage })
       })
       result.sort((a,b) => a.number - b.number)
       res.status(200).json(result)
@@ -47,7 +46,7 @@ async function getStatistics(req, res) {
 async function updateUser(req, res) {
   try {
     const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, { password: 0 })
-    res.status(200).json({message: `${user.name}'s profile updated!`, user })
+    res.status(200).json({ message: `${user.name}'s profile updated!`, user })
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
   }
