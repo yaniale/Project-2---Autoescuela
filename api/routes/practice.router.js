@@ -13,9 +13,7 @@ const {
  } = require('../controllers/practice.controller')
 
 
-router.get('/', checkAuth,
-// checkAdmin,
- getAllPractices)
+router.get('/', checkAuth, checkAdmin, getAllPractices)
 router.put('/:id',checkAuth, checkAdmin, checkTeacher, updatePractice)
 router.delete('/:id', checkAuth, checkAdmin, checkTeacher, deletePractice)
 
