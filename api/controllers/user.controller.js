@@ -22,12 +22,9 @@ async function getOneUser(req, res) {
   }
 }
 
-async function getStatistics(req, res) {
+async function getUserStatistics(req, res) {
   try {
     const user = await UserModel.findById(req.params.id)
-    if (user.id !== res.locals.user.id && res.locals.user.role === 'student') {
-      return res.status(500).send('Access denied')
-    }
     const statistics = user.studentData.statistics
     const topics = statistics.map(async element => {
       const topic = await topicModel.findById(element.topic)
@@ -46,12 +43,34 @@ async function getStatistics(req, res) {
   }
 }
 
+async function getUserMedCert(req, res) {
+  try {
+    const user = await UserModel.findById(req.params.id)
+    const cert = user.studentData.medCert
+    if(!cert) return res.status(400).send('No Medical Certificate')
+    res.status(200).sendFile(cert, {root: 'public/med-certs'})
+  } catch (error) {
+    res.status(500).send(`Request Error: ${error}`)
+  }
+}
+
+async function getUserDriveLic(req, res) {
+  try {
+    const user = await UserModel.findById(req.params.id)
+    const license = user.teacherData.drivingLic
+    if(!license) return res.status(400).send('No Driving License')
+    res.status(200).sendFile(license, {root: 'public/driv-lic'})
+  } catch (error) {
+    res.status(500).send(`Request Error: ${error}`)
+  }
+}
+
 async function updateUser(req, res) {
   try {
     const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, { password: 0 })
     if (req.body.studentData.hasOwnProperty('teacher')) {
       const teacher = await UserModel.findById(req.body.studentData.teacher)
-      if (teacher.teacherData.students.indexOf('teacherData.students' !== -1)) {
+      if (teacher.teacherData.students.indexOf('teacherData.students') !== -1) {
         return res.send('student already assigned')
       } else {
         teacher.teacherData.students.push(req.params.id)
@@ -102,11 +121,21 @@ function getProfilePhoto(req, res) {
   }
 }
 
-function getMedCertificate(req, res) {
+function getMyMedCert(req, res) {
   try {
     const cert = res.locals.user.studentData.medCert
     if(!cert) return res.status(400).send('No Medical Certificate')
     res.status(200).sendFile(cert, {root: 'public/med-certs'})
+  } catch (error) {
+    res.status(500).send(`Request error: ${error}`)
+  }
+}
+
+function getMyDrivingLic(req, res) {
+  try {
+    const license = res.locals.user.teacherData.drivingLic
+    if(!license) return res.status(400).send('No Driving License added')
+    res.status(200).sendFile(license, {root: 'public/driv-lic'})
   } catch (error) {
     res.status(500).send(`Request error: ${error}`)
   }
@@ -175,6 +204,29 @@ async function getMyPractices(req, res) {
   }
 }
 
+async function getMyStatistics(req, res) {
+  try {
+    const user = await UserModel.findById(req.params.id)
+    if (user.id !== res.locals.user.id && res.locals.user.role === 'student') {
+      return res.status(500).send('Access denied')
+    }
+    const statistics = user.studentData.statistics
+    const topics = statistics.map(async element => {
+      const topic = await topicModel.findById(element.topic)
+      return { title: topic.title, number: topic.topicNumber }
+    })
+    Promise.all(topics).then(names => {
+      const result = []
+      names.forEach((name, index) => {
+        result.push({ number: name.number, topic: name.title, correct: statistics[index].correct, answered: statistics[index].answered, percentage: statistics[index].percentage })
+      })
+      result.sort((a, b) => a.number - b.number)
+      res.status(200).json(result)
+    })
+  } catch (error) {
+    res.status(500).send(`Request Error: ${error}`)
+  }
+}
 
 async function deleteMyPractice(req, res) {
   try {
@@ -217,15 +269,19 @@ async function deleteMyPractice(req, res) {
 module.exports = {
   getAllUsers,
   getOneUser,
-  getStatistics,
+  getUserStatistics,
+  getUserMedCert,
+  getUserDriveLic,
   updateUser,
   deleteUser,
   getMyProfile,
   updateMyProfile,
   getProfilePhoto,
-  getMedCertificate,
+  getMyMedCert,
+  getMyDrivingLic,
   changePassword,
   createPractice,
   getMyPractices,
+  getMyStatistics,
   deleteMyPractice
 }

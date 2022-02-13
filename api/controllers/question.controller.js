@@ -1,5 +1,6 @@
 const QuestionModel= require('../models/question.model')
 const TopicModel = require('../models/topic.model')
+const TestModel = require('../models/test.model')
 
 async function getAllQuestions(req, res) {
   try {
@@ -40,7 +41,14 @@ async function updateQuestion(req, res) {
 
 async function deleteQuestion(req, res) {
   try {
-    const question = await QuestionModel.findByIdAndDelete(req.params.id)
+    const delQuestion = await QuestionModel.findByIdAndDelete(req.params.id)
+    const tests = await TestModel.find({ questions: delQuestion })
+    tests.forEach(test => {
+      test.questions = test.questions.filter(question => {
+        return question.toString() !== delQuestion.id
+      })
+      test.save()
+    })
     res.status(200).send('Question deleted')
   } catch (error) {
     res.status(500).send(`Request error: ${error}`)
