@@ -140,9 +140,10 @@ async function createPractice(req, res) {
       teacherUser.teacherData.lessons.push(practice.id)
       teacherUser.save()
 
-      res.status(200).json({ message: `You've booked a driving lesson!`, practice })
+      res.status(200).json({ message: `You've booked a drivning lesson!`, practice })
     } else {
-      const booked = bookedPractices.map(practice => {
+      const dayPractices = await DriveLessonModel.find({ date: req.body.date, teacher: teacher })
+      const booked = dayPractices.map(practice => {
         return practice.bookSlot
       })
       const arr = ["09:00", "10:00","11:00","12:00","13:00","16:00","17:00","18:00"]
@@ -191,9 +192,7 @@ async function deleteMyPractice(req, res) {
       const delPractice = await DriveLessonModel.findByIdAndRemove(req.params.id)
       const teacher = await UserModel.findById(delPractice.teacher)
       const student = await UserModel.findById(delPractice.student)
-      console.log(delPractice)
-      console.log(teacher.teacherData.lessons)
-      console.log(student.studentData.driveLessons.lessons)
+      
       teacher.teacherData.lessons = teacher.teacherData.lessons.filter(lesson => {
         return lesson.toString() !== delPractice.id
       })

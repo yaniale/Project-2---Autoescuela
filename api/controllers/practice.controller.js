@@ -1,4 +1,5 @@
 const DriveLessonModel = require('../models/drivelesson.model')
+const UserModel = require('../models/user.model')
 
 async function getAllPractices(req, res) {
   try {
@@ -30,6 +31,17 @@ async function deletePractice(req, res) {
       res.status(200).send('Practice cannot be deleted!')
     } else {
       await DriveLessonModel.findByIdAndRemove(req.params.id)
+      const teacher = await UserModel.findById(practice.teacher)
+      const student = await UserModel.findById(practice.student)
+      
+      teacher.teacherData.lessons = teacher.teacherData.lessons.filter(lesson => {
+        return lesson.toString() !== practice.id
+      })
+      teacher.save()
+      student.studentData.driveLessons.lessons = student.studentData.driveLessons.lessons.filter(lesson => {
+        return lesson.toString() !== practice.id
+      })
+      student.save()
       res.status(200).send('Practice deleted successfully!')
     }
   } catch (error) {
