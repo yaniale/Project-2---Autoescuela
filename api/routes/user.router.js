@@ -25,7 +25,7 @@ const {
 } = require ('../controllers/user.controller')
 
 router.get('/', checkAuth, checkTeacher, getAllUsers)
-router.get('/:id',checkAuth, getOneUser)
+router.get('/:id',checkAuth, checkTeacher, getOneUser)
 router.get('/:id/statistics', checkAuth, getStatistics)
 router.get('/:id/certificate', checkAuth, checkAdmin, getUserMedCert)
 router.patch('/:id', checkAuth, checkAdmin, updateUser)

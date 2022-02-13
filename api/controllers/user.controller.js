@@ -50,8 +50,8 @@ async function getUserMedCert(req, res) {
   try {
     const user = await UserModel.findById(req.params.id)
     const cert = user.studentData.medCert
-    if(!cert) return res.status(400).send('No Medical Certificate')
-    res.status(200).sendFile(cert, {root: 'public/med-certs'})
+    if (!cert) return res.status(400).send('No Medical Certificate')
+    res.status(200).sendFile(cert, { root: 'public/med-certs' })
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
   }
@@ -62,14 +62,13 @@ async function updateUser(req, res) {
     const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, { password: 0 })
     if (req.body.studentData.hasOwnProperty('teacher')) {
       const teacher = await UserModel.findById(req.body.studentData.teacher)
-      if (teacher.teacherData.students.indexOf('teacherData.students' !== -1)) {
+      if (teacher.teacherData.students.indexOf('teacherData.students') !== -1) {
         return res.send('student already assigned')
       } else {
         teacher.teacherData.students.push(req.params.id)
         teacher.save()
       }
     }
-
     res.status(200).json({ message: `${user.name}'s profile updated!`, user })
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
@@ -78,8 +77,16 @@ async function updateUser(req, res) {
 
 async function deleteUser(req, res) {
   try {
-    const user = await UserModel.findByIdAndDelete(req.params.id)
-    res.status(200).send(`${user.name}'s profile deleted`)
+    const user = await UserModel.findById(req.params.id)
+    const admin = res.locals.user.id
+    if (user.id === admin) return res.send('Dear, only God could delete yourself from this world')
+
+    if (user.studentData.teacher || user.teacherData.student) {
+      return res.send(`User ${user.name} has teacher/student assigned and cannot be deleted`)
+    } else {
+      const delUser = await UserModel.findByIdAndDelete(req.params.id)
+      res.status(200).send(`${delUser.name}'s profile deleted`)
+    }
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
   }
@@ -106,8 +113,8 @@ async function updateMyProfile(req, res) {
 function getProfilePhoto(req, res) {
   try {
     const photo = res.locals.user.photo
-    if(!photo) return res.status(400).send('No profile photo')
-    res.status(200).sendFile(photo, {root: 'public/profile-photos'})
+    if (!photo) return res.status(400).send('No profile photo')
+    res.status(200).sendFile(photo, { root: 'public/profile-photos' })
   } catch (error) {
     res.status(500).send(`Request error: ${error}`)
   }
@@ -116,8 +123,8 @@ function getProfilePhoto(req, res) {
 function getMyMedCert(req, res) {
   try {
     const cert = res.locals.user.studentData.medCert
-    if(!cert) return res.status(400).send('No Medical Certificate')
-    res.status(200).sendFile(cert, {root: 'public/med-certs'})
+    if (!cert) return res.status(400).send('No Medical Certificate')
+    res.status(200).sendFile(cert, { root: 'public/med-certs' })
   } catch (error) {
     res.status(500).send(`Request error: ${error}`)
   }
@@ -162,7 +169,7 @@ async function createPractice(req, res) {
       const booked = dayPractices.map(practice => {
         return practice.bookSlot
       })
-      const arr = ["09:00", "10:00","11:00","12:00","13:00","16:00","17:00","18:00"]
+      const arr = ["09:00", "10:00", "11:00", "12:00", "13:00", "16:00", "17:00", "18:00"]
       const free = arr.filter(hour => {
         return booked.indexOf(hour) === -1
       })
