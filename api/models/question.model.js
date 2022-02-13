@@ -15,7 +15,8 @@ const questionSchema = new mongoose.Schema({
   options: [{}],      
   topic: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'topic'
+    ref: 'topic',
+    required: [true, 'Topic is required']
   }
 })
 
