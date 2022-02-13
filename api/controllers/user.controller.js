@@ -49,9 +49,14 @@ async function updateUser(req, res) {
     const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, { password: 0 })
     if (req.body.studentData.hasOwnProperty('teacher')) {
       const teacher = await UserModel.findById(req.body.studentData.teacher)
-      teacher.teacherData.students.push(req.params.id)
-      teacher.save()
+      if (teacher.teacherData.students.indexOf('teacherData.students' !== -1)) {
+        return res.send('student already assigned')
+      } else {
+        teacher.teacherData.students.push(req.params.id)
+        teacher.save()
+      }
     }
+
     res.status(200).json({ message: `${user.name}'s profile updated!`, user })
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
@@ -135,13 +140,24 @@ async function deleteMyPractice(req, res) {
     } else if (resultTime < 24) {
       res.status(200).send('Too late to cancel your lesson!')
     } else {
-      await DriveLessonModel.findByIdAndRemove(req.params.id)
+      const delPractice = await DriveLessonModel.findByIdAndRemove(req.params.id)
+      const teacher = await UserModel.findById(delPractice.teacher)
+      const student = await UserModel.findById(delPractice.student)
+      teacher.teacherData.lessons = teacher.teacherData.lessons.filter(lesson => {
+        return lesson.toString() !== delPractice.id
+      })
+      teacher.save()
+      student.studentData.driveLessons.lessons = student.studentData.driveLessons.lessons.filter(lesson => {
+        return lesson.toString() !== delPractice.id
+      })
+      student.save()
       res.status(200).send('Practice deleted successfully!')
     }
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
   }
 }
+
 
 module.exports = {
   getAllUsers,
