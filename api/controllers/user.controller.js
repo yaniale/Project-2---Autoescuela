@@ -107,6 +107,22 @@ function getMedCertificate(req, res) {
   }
 }
 
+async function changePassword(req, res) {
+  try {
+    const user = res.locals.user
+    bcrypt.compare(req.body.currentPassword, user.password, (err, result) => {
+      if (err) return res.status(500).send(err)
+      if (!result) return res.status(500).send('Incorrect password. Unable to change.')
+
+      user.password = bcrypt.hashSync(req.body.newPassword, 10)
+      user.save()
+      res.status(200).send(`Your password has been changed`)
+    })
+  } catch (error) {
+    res.status(500).send(`Request Error: ${error}`)
+  }
+}
+
 async function createPractice(req, res) {
   try {
     const student = res.locals.user
@@ -126,7 +142,18 @@ async function createPractice(req, res) {
 
       res.status(200).json({ message: `You've booked a driving lesson!`, practice })
     } else {
-      res.send('The teacher is busy!!')
+      const booked = bookedPractices.map(practice => {
+        return practice.bookSlot
+      })
+      const arr = ["09:00", "10:00","11:00","12:00","13:00","16:00","17:00","18:00"]
+      const free = arr.filter(hour => {
+        return booked.indexOf(hour) === -1
+      })
+      if (free.length > 0) {
+        res.status(200).send(`The teacher is busy!!! Available hours for this date are: ${free}`)
+      } else {
+        res.status(200).send('Sorry, currently there are no more slots available por this date')
+      }
     }
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
@@ -142,21 +169,6 @@ async function getMyPractices(req, res) {
   }
 }
 
-async function changePassword(req, res) {
-  try {
-    const user = res.locals.user
-    bcrypt.compare(req.body.currentPassword, user.password, (err, result) => {
-      if (err) return res.status(500).send(err)
-      if (!result) return res.status(500).send('Incorrect password. Unable to change.')
-
-      user.password = bcrypt.hashSync(req.body.newPassword, 10)
-      user.save()
-      res.status(200).send(`Your password has been changed`)
-    })
-  } catch (error) {
-    res.status(500).send(`Request Error: ${error}`)
-  }
-}
 
 async function deleteMyPractice(req, res) {
   try {
@@ -176,7 +188,20 @@ async function deleteMyPractice(req, res) {
     } else if (resultTime < 24) {
       res.status(200).send('Too late to cancel your lesson!')
     } else {
-      await DriveLessonModel.findByIdAndRemove(req.params.id)
+      const delPractice = await DriveLessonModel.findByIdAndRemove(req.params.id)
+      const teacher = await UserModel.findById(delPractice.teacher)
+      const student = await UserModel.findById(delPractice.student)
+      console.log(delPractice)
+      console.log(teacher.teacherData.lessons)
+      console.log(student.studentData.driveLessons.lessons)
+      teacher.teacherData.lessons = teacher.teacherData.lessons.filter(lesson => {
+        return lesson.toString() !== delPractice.id
+      })
+      teacher.save()
+      student.studentData.driveLessons.lessons = student.studentData.driveLessons.lessons.filter(lesson => {
+        return lesson.toString() !== delPractice.id
+      })
+      student.save()
       res.status(200).send('Practice deleted successfully!')
     }
   } catch (error) {
@@ -194,8 +219,8 @@ module.exports = {
   updateMyProfile,
   getProfilePhoto,
   getMedCertificate,
+  changePassword,
   createPractice,
   getMyPractices,
-  changePassword,
   deleteMyPractice
 }

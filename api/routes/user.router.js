@@ -17,9 +17,9 @@ const {
   updateMyProfile,
   getProfilePhoto,
   getMedCertificate,
+  changePassword,
   createPractice,
   getMyPractices,
-  changePassword,
   deleteMyPractice
 } = require ('../controllers/user.controller')
 
@@ -32,9 +32,9 @@ router.get('/profile/:id', checkAuth, getMyProfile)
 router.patch('/profile/:id', checkAuth, updateMyProfile)
 router.get('/profile/:id/photo', checkAuth, getProfilePhoto)
 router.get('/profile/:id/certificate', checkAuth, getMedCertificate)
+router.post('/profile/:id/password', checkAuth, changePassword)
 router.post('/profile/:id/practice', checkAuth, checkStudent, createPractice)
 router.get('/profile/:id/practice', checkAuth, checkStudent, getMyPractices)
-router.post('/profile/:id/password', checkAuth, changePassword)
 router.delete('/profile/:userId/practice/:id', checkAuth, checkStudent, deleteMyPractice)
 
 
