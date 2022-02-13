@@ -7,7 +7,8 @@ const topicSchema = new mongoose.Schema ({
     unique: [true, 'Title already exists']
   },
   content: {
-    type: String
+    type: String,
+    required: [true, 'Content is required']
   },
   topicNumber: {
     type: Number,
