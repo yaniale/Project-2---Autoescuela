@@ -20,4 +20,4 @@ const addressSchema = new mongoose.Schema({
   }
 })
 
-module.exports = AddressSchema
+module.exports = addressSchema

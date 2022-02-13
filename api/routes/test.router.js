@@ -8,6 +8,7 @@ const {
 const {
   getAllTests,
   getOneTest,
+  getTestStatistics,
   createTest,
   submitTest,
   updateTest,
@@ -16,6 +17,7 @@ const {
 
 router.get('/', checkAuth, getAllTests)
 router.get('/:id', checkAuth, getOneTest)
+router.get('/:id/statistics', checkAuth, getTestStatistics)
 router.post('/', checkAuth, checkAdmin, createTest)
 router.post('/:id', checkAuth, submitTest)
 router.put('/:id', checkAuth, checkAdmin, updateTest)

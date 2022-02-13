@@ -13,8 +13,8 @@ const {
  } = require('../controllers/practice.controller')
 
 
-router.get('/', checkAuth, checkAdmin, getAllPractices)
-router.put('/:id',checkAuth, checkAdmin, checkTeacher, updatePractice)
-router.delete('/:id', checkAuth, checkAdmin, checkTeacher, deletePractice)
+router.get('/', checkAuth, checkTeacher, getAllPractices)
+router.patch('/:id',checkAuth, checkTeacher, updatePractice)
+router.delete('/:id', checkAuth, checkAdmin, deletePractice)
 
 module.exports = router

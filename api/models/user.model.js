@@ -1,4 +1,29 @@
 const mongoose = require('mongoose')
+const validate = require('mongoose-validator')
+
+var mailValidator =[
+  validate({
+    validator: 'isEmail',
+    message: 'Invalid email format'
+  })
+]
+
+var phoneValidator = [
+  validate({
+    validator: 'isNumeric',
+    message: 'Invalid phone number'
+  })
+]
+
+var dniValidator = [
+  validate({
+    validator: v => {
+      return/[0-9]{8}[a-z]/i.test(v)
+      },
+      message: 'Invalid email format'
+  })
+]
+
 
 const statisticsSchema = require('./statistics.model')
 
@@ -14,8 +39,9 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, 'Email is required'],
-    unique: true,
-    immutable: true
+    unique: [true, 'This email already exists'],
+    immutable: true,
+    validate: mailValidator
   },
   password: {
     type: String,
@@ -25,24 +51,26 @@ const userSchema = new mongoose.Schema({
   // dni: {
   //   type: String,
   //   required: [true, 'DNI is required'],
-  //   unique: true,
-  //   immutable: true
+  //   immutable: true,
+  //   validate: dniValidator,
+  //   unique: [true, 'DNI already registered']
   // },
   // expireDate: {
   //   type: Date,
   //   required: [true, 'Expire date is required']
   // },
-  // birthDate: {
-  //   type: Date,
-  //   required: [true, 'Birth date is required']
-  // },
+  birthDate: {
+    type: Date
+    // required: [true, 'Birth date is required']
+  },
   // phone: {
-  //   type: Number,
-  //   required: [true, 'Phone is required']
+  //   type: String,
+  //   required: [true, 'Phone is required'],
+  //   validate: phoneValidator
   // },
-  // photo: {
-  //   type: String
-  // },
+  photo: {
+    type: String
+  },
   role: {
     type: String,
     enum: ['admin', 'teacher', 'student'],
@@ -84,7 +112,6 @@ const userSchema = new mongoose.Schema({
     teacher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user'
-      //validar que el role sea teacher
     }
   },
   teacherData: {
@@ -94,7 +121,6 @@ const userSchema = new mongoose.Schema({
     students: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user'
-      //validar que el role sea student
     }],
     lessons: [{
       type: mongoose.Schema.Types.ObjectId,
