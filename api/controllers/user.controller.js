@@ -49,8 +49,8 @@ async function getStatistics(req, res) {
 async function updateUser(req, res) {
   try {
     const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, { password: 0 })
-    if (user.role !== 'admin' && req.body.studentData.hasOwnProperty('teacher')) {
-      const teacher = await UserModel.findById(req.body.studentData.teacher)
+    if ( Object.keys(req.body).indexOf('studentData.teacher') !== -1 ) {
+      const teacher = await UserModel.findById(user.studentData.teacher)
       teacher.teacherData.students.push(req.params.id)
       teacher.save()
     }
