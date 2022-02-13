@@ -34,6 +34,22 @@ async function getOneTest(req, res) {
   }
 }
 
+function getTestStatistics(req, res) {
+  try {
+    const arr = res.locals.user.studentData.testsDone
+    const index = arr.findIndex(object => {
+      if (object.id.toString() === req.params.id) { return true }
+    })
+    if (index !== -1) {
+      return res.status(200).json(arr[index])
+    } else {
+      return res.status(400).send(`Test ${req.params.id} not found in your profile`)
+    }
+  } catch (error) {
+    res.status(500).send(`Request error: ${error}`)
+  }
+}
+
 async function createTest(req, res) {
   try {
     const test = await TestModel.create(req.body)
@@ -142,6 +158,7 @@ async function deleteTest(req, res) {
 module.exports = {
   getAllTests,
   getOneTest,
+  getTestStatistics,
   createTest,
   submitTest,
   updateTest,

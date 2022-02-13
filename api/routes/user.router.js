@@ -15,6 +15,9 @@ const {
   deleteUser,
   getMyProfile,
   updateMyProfile,
+  getProfilePhoto,
+  getMedCertificate,
+  changePassword,
   createPractice,
   getMyPractices,
   deleteMyPractice
@@ -27,6 +30,9 @@ router.patch('/:id', checkAuth, checkAdmin, updateUser)
 router.delete('/:id', checkAuth, checkAdmin, deleteUser)
 router.get('/profile/:id', checkAuth, getMyProfile)
 router.patch('/profile/:id', checkAuth, updateMyProfile)
+router.get('/profile/:id/photo', checkAuth, getProfilePhoto)
+router.get('/profile/:id/certificate', checkAuth, getMedCertificate)
+router.post('/profile/:id/password', checkAuth, changePassword)
 router.post('/profile/:id/practice', checkAuth, checkStudent, createPractice)
 router.get('/profile/:id/practice', checkAuth, checkStudent, getMyPractices)
 router.delete('/profile/:userId/practice/:id', checkAuth, checkStudent, deleteMyPractice)
