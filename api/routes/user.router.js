@@ -11,12 +11,13 @@ const {
   getAllUsers,
   getOneUser,
   getStatistics,
+  getUserMedCert,
   updateUser,
   deleteUser,
   getMyProfile,
   updateMyProfile,
   getProfilePhoto,
-  getMedCertificate,
+  getMyMedCert,
   changePassword,
   createPractice,
   getMyPractices,
@@ -26,12 +27,13 @@ const {
 router.get('/', checkAuth, checkTeacher, getAllUsers)
 router.get('/:id',checkAuth, getOneUser)
 router.get('/:id/statistics', checkAuth, getStatistics)
+router.get('/:id/certificate', checkAuth, checkAdmin, getUserMedCert)
 router.patch('/:id', checkAuth, checkAdmin, updateUser)
 router.delete('/:id', checkAuth, checkAdmin, deleteUser)
 router.get('/profile/:id', checkAuth, getMyProfile)
 router.patch('/profile/:id', checkAuth, updateMyProfile)
 router.get('/profile/:id/photo', checkAuth, getProfilePhoto)
-router.get('/profile/:id/certificate', checkAuth, getMedCertificate)
+router.get('/profile/:id/certificate', checkAuth, getMyMedCert)
 router.post('/profile/:id/password', checkAuth, changePassword)
 router.post('/profile/:id/practice', checkAuth, checkStudent, createPractice)
 router.get('/profile/:id/practice', checkAuth, checkStudent, getMyPractices)

@@ -46,6 +46,17 @@ async function getStatistics(req, res) {
   }
 }
 
+async function getUserMedCert(req, res) {
+  try {
+    const user = await UserModel.findById(req.params.id)
+    const cert = user.studentData.medCert
+    if(!cert) return res.status(400).send('No Medical Certificate')
+    res.status(200).sendFile(cert, {root: 'public/med-certs'})
+  } catch (error) {
+    res.status(500).send(`Request Error: ${error}`)
+  }
+}
+
 async function updateUser(req, res) {
   try {
     const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, { password: 0 })
@@ -102,7 +113,7 @@ function getProfilePhoto(req, res) {
   }
 }
 
-function getMedCertificate(req, res) {
+function getMyMedCert(req, res) {
   try {
     const cert = res.locals.user.studentData.medCert
     if(!cert) return res.status(400).send('No Medical Certificate')
@@ -218,12 +229,13 @@ module.exports = {
   getAllUsers,
   getOneUser,
   getStatistics,
+  getUserMedCert,
   updateUser,
   deleteUser,
   getMyProfile,
   updateMyProfile,
   getProfilePhoto,
-  getMedCertificate,
+  getMyMedCert,
   changePassword,
   createPractice,
   getMyPractices,
