@@ -11,7 +11,7 @@ async function signup(req, res) {
     const user = await UserModel.create(req.body)
     res.status(200).json({message: `${user.name}'s profile successfully created!`, user})
   } catch (error) {
-    res.status(500).send('Error creating user')
+    res.status(500).send(`Error creating user: ${error}`)
   }
 }
 
