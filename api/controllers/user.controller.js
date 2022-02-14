@@ -68,15 +68,6 @@ async function getUserDriveLic(req, res) {
 async function updateUser(req, res) {
   try {
     const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, { password: 0 })
-    if (user.role === 'student' && req.body.hasOwnProperty('studentData.teacher')) {
-      const teacher = await UserModel.findById(Object.values(req.body)[0])
-      if (teacher.teacherData.students.indexOf(user.id) !== -1) {
-        return res.send('student already assigned')
-      } else {
-        teacher.teacherData.students.push(req.params.id)
-        teacher.save()
-      }
-    }
     res.status(200).json({ message: `${user.name}'s profile updated!`, user })
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
@@ -87,6 +78,20 @@ async function deleteUser(req, res) {
   try {
     const user = await UserModel.findByIdAndDelete(req.params.id)
     res.status(200).send(`${user.name}'s profile deleted`)
+  } catch (error) {
+    res.status(500).send(`Request Error: ${error}`)
+  }
+}
+
+async function assignTeacher(req, res) {
+  try {
+    const student = await UserModel.findById(req.params.studentId)
+    const teacher = await UserModel.findById(req.params.teacherId)
+    student.studentData.teacher = req.params.teacherId
+    teacher.teacherData.students.push(student.id)
+    await student.save()
+    await teacher.save()
+    res.status(200).send(`Teacher ${teacher.name} assigned to ${student.name}`)
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
   }
@@ -173,13 +178,13 @@ async function createPractice(req, res) {
       teacherUser.teacherData.lessons.push(practice.id)
       teacherUser.save()
 
-      res.status(200).json({ message: `You've booked a drivning lesson!`, practice })
+      res.status(200).json({ message: `You've booked a driving lesson!`, practice })
     } else {
       const dayPractices = await DriveLessonModel.find({ date: req.body.date, teacher: teacher })
       const booked = dayPractices.map(practice => {
         return practice.bookSlot
       })
-      const arr = ["09:00", "10:00","11:00","12:00","13:00","16:00","17:00","18:00"]
+      const arr = ["9:00", "10:00","11:00","12:00","13:00","16:00","17:00","18:00"]
       const free = arr.filter(hour => {
         return booked.indexOf(hour) === -1
       })
@@ -273,6 +278,7 @@ module.exports = {
   getUserDriveLic,
   updateUser,
   deleteUser,
+  assignTeacher,
   getMyProfile,
   updateMyProfile,
   getProfilePhoto,

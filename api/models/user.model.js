@@ -28,7 +28,6 @@ var dniValidator = [
 
 const addressSchema = require('./address.model')
 const statisticsSchema = require('./statistics.model')
-const addressSchema = require('./address.model')
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -113,10 +112,10 @@ const userSchema = new mongoose.Schema({
         ref: 'driveLesson'
       }]
     },
-    teacher: [{
+    teacher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
-    }]
+    }
   },
   teacherData: {
     drivingLic: {

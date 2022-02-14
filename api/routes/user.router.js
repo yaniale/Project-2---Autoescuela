@@ -15,6 +15,7 @@ const {
   getUserDriveLic,
   updateUser,
   deleteUser,
+  assignTeacher,
   getMyProfile,
   updateMyProfile,
   getProfilePhoto,
@@ -34,6 +35,7 @@ router.get('/:id/certificate', checkAuth, checkAdmin, getUserMedCert)
 router.get('/:id/license', checkAuth, checkAdmin, getUserDriveLic)
 router.patch('/:id', checkAuth, checkAdmin, updateUser)
 router.delete('/:id', checkAuth, checkAdmin, deleteUser)
+router.patch('/:studentId/teacher/:teacherId', checkAuth, checkAdmin, assignTeacher)
 router.get('/profile/:id', checkAuth, getMyProfile)
 router.patch('/profile/:id', checkAuth, updateMyProfile)
 router.get('/profile/:id/photo', checkAuth, getProfilePhoto)
