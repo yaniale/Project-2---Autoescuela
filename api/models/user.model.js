@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validate = require('mongoose-validator')
 
+
 var mailValidator =[
   validate({
     validator: 'isEmail',
@@ -19,12 +20,13 @@ var dniValidator = [
   validate({
     validator: v => {
       return/[0-9]{8}[a-z]/i.test(v)
-      },
-      message: 'Invalid email format'
+    },
+    message: 'Invalid email format'
   })
 ]
 
 
+const addressSchema = require('./address.model')
 const statisticsSchema = require('./statistics.model')
 const addressSchema = require('./address.model')
 
@@ -80,6 +82,7 @@ const userSchema = new mongoose.Schema({
   studentData: {
     medCert: {
       type: String,
+      default: ''
     },
     testsDone: [{
       id: {
@@ -110,14 +113,15 @@ const userSchema = new mongoose.Schema({
         ref: 'driveLesson'
       }]
     },
-    teacher: {
+    teacher: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user'
-    }
+      ref: 'user',
+    }]
   },
   teacherData: {
     drivingLic: {
-      type: String
+      type: String,
+      default: ''
     },
     students: [{
       type: mongoose.Schema.Types.ObjectId,
