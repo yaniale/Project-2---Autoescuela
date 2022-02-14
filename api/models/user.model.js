@@ -26,6 +26,7 @@ var dniValidator = [
 
 
 const statisticsSchema = require('./statistics.model')
+const addressSchema = require('./address.model')
 
 const userSchema = new mongoose.Schema({
   name: {
