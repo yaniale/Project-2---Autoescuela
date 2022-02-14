@@ -29,7 +29,7 @@ const {
 } = require ('../controllers/user.controller')
 
 router.get('/', checkAuth, checkTeacher, getAllUsers)
-router.get('/:id',checkAuth, getOneUser)
+router.get('/:id',checkAuth,checkTeacher, getOneUser)
 router.get('/:id/statistics', checkAuth, checkTeacher, getUserStatistics)
 router.get('/:id/certificate', checkAuth, checkAdmin, getUserMedCert)
 router.get('/:id/license', checkAuth, checkAdmin, getUserDriveLic)
