@@ -187,7 +187,7 @@ async function createPractice(req, res) {
       if (free.length > 0) {
         res.status(200).send(`The teacher is busy!!! Available hours for this date are: ${free}`)
       } else {
-        res.status(200).send('Sorry, currently there are no more slots available por this date')
+        res.status(200).send('Sorry, currently there are no more slots available for this date')
       }
     }
   } catch (error) {

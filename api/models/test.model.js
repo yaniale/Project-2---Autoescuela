@@ -4,6 +4,7 @@ const testSchema = new mongoose.Schema({
   questions: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'question',
+    unique: [true, 'Questions duplicated']
   }],
   correct: {
     type: Number,

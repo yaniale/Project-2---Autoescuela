@@ -47,27 +47,27 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password is required']
   },
-  //address: [addressSchema],
-  // dni: {
-  //   type: String,
-  //   required: [true, 'DNI is required'],
-  //   immutable: true,
-  //   validate: dniValidator,
-  //   unique: [true, 'DNI already registered']
-  // },
-  // expireDate: {
-  //   type: Date,
-  //   required: [true, 'Expire date is required']
-  // },
-  birthDate: {
-    type: Date
-    // required: [true, 'Birth date is required']
+  address: [addressSchema],
+  dni: {
+    type: String,
+    required: [true, 'DNI is required'],
+    immutable: true,
+    validate: dniValidator,
+    unique: [true, 'DNI already registered']
   },
-  // phone: {
-  //   type: String,
-  //   required: [true, 'Phone is required'],
-  //   validate: phoneValidator
-  // },
+  expireDate: {
+    type: Date,
+    required: [true, 'Expire date is required']
+  },
+  birthDate: {
+    type: Date,
+    required: [true, 'Birth date is required']
+  },
+  phone: {
+    type: String,
+    required: [true, 'Phone is required'],
+    validate: phoneValidator
+  },
   photo: {
     type: String
   },
