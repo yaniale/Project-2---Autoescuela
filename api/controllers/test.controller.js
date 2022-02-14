@@ -1,3 +1,5 @@
+const imageToBase64 = require('image-to-base64')
+
 const TestModel = require('../models/test.model')
 
 async function getAllTests(req, res) {
@@ -11,17 +13,29 @@ async function getAllTests(req, res) {
 
 async function getOneTest(req, res) {
   try {
-    const list = []
+    let list = []
     await TestModel.findById(req.params.id, { correct: 0, answered: 0, percentage: 0, __v: 0 })
       .populate('questions')
       .then(test => {
+        async function getImage(element) {
+          if(element.picture !== undefined) {
+            const img = await imageToBase64(`./public/images/${element.picture}`)
+            const question = { question: element.text, image: img, options: element.options }
+            list.push(question)
+          }
+          else {
+            const question = { question: element.text, options: element.options }
+            list.push(question)
+          }
+        }
         test.questions.forEach(element => {
-          console.log(element)
-          const question = { question: element.text, image: element.picture, options: element.options }
-          list.push(question)
+          getImage(element)
         })
       })
-      res.status(200).json(list)
+
+    Promise.all(list).then(result => {
+      res.status(200).json(result)
+    })
   } catch (error) {
     res.status(500).send(`Request error: ${error}`)
   }

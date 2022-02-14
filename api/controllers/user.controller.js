@@ -68,16 +68,15 @@ async function getUserDriveLic(req, res) {
 async function updateUser(req, res) {
   try {
     const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, { password: 0 })
-    if (req.body.studentData.hasOwnProperty('teacher')) {
-      const teacher = await UserModel.findById(req.body.studentData.teacher)
-      if (teacher.teacherData.students.indexOf('teacherData.students') !== -1) {
+    if (user.role === 'student' && req.body.hasOwnProperty('studentData.teacher')) {
+      const teacher = await UserModel.findById(Object.values(req.body)[0])
+      if (teacher.teacherData.students.indexOf(user.id) !== -1) {
         return res.send('student already assigned')
       } else {
         teacher.teacherData.students.push(req.params.id)
         teacher.save()
       }
     }
-
     res.status(200).json({ message: `${user.name}'s profile updated!`, user })
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
