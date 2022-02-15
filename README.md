@@ -27,10 +27,7 @@ GET   | /user/:id/certificate    | YES     | Admin | Get User Medical Certificat
 GET   | /user/:id/license    | YES     | Admin | Get User Driver License            | -  | `static file`
 PUT   | /user/:id     | YES     | Admin |Update user            | -  | `message`, `profile`
 PATCH | /user/:id     | YES     | Admin |Delete user             | -  | `student deleted`
-DELETE| /user/:studentId/teacher/:teacherId   | YES     | Admin |Assignt teacher to student           | -  | `Teacher X assigned to Y`
-<!-- GET   | /user/profile/messages     | YES     | | Check Messages            | - | messages
-POST   | /user/profile/messages     | YES    | | Send Message              | `text`, `toTeacher`  | Message sent to `toTeacher.email`
-DELETE   | /user/profile/messages/:id     | YES    | | Delete Message              |`messageId`   | Message deleted -->
+PATCH| /user/:studentId/teacher/:teacherId   | YES     | Admin |Assignt teacher to student           | -  | `Teacher X assigned to Y`
 GET   | /user/profile/:id    | YES     | | Get My Profile            | - | `profile`
 PATCH   | /user/profile/:id    | YES     | | Update My Profile            | - | `profile`
 GET   | /user/profile/:id/photo    | YES     | | Get my Profile Picture           | - | `static file`
