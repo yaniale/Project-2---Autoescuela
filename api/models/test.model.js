@@ -3,8 +3,7 @@ const mongoose = require ('mongoose')
 const testSchema = new mongoose.Schema({
   questions: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'question',
-    unique: [true, 'Questions are repeated']
+    ref: 'question'
   }],
   correct: {
     type: Number,

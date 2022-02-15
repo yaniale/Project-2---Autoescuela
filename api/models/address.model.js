@@ -13,10 +13,10 @@ const addressSchema = new mongoose.Schema({
   },
   door: {
     type: String,
-    required: [true, 'Password is required']
   },
   postalCode: {
     type: Number,
+    required: [true, 'Postal Code is required']
   }
 })
 

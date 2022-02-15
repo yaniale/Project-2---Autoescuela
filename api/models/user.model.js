@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validate = require('mongoose-validator')
 
+
 var mailValidator =[
   validate({
     validator: 'isEmail',
@@ -19,12 +20,13 @@ var dniValidator = [
   validate({
     validator: v => {
       return/[0-9]{8}[a-z]/i.test(v)
-      },
-      message: 'Invalid email format'
+    },
+    message: 'Invalid email format'
   })
 ]
 
 
+const addressSchema = require('./address.model')
 const statisticsSchema = require('./statistics.model')
 
 const userSchema = new mongoose.Schema({
@@ -47,27 +49,27 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password is required']
   },
-  //address: [addressSchema],
-  // dni: {
-  //   type: String,
-  //   required: [true, 'DNI is required'],
-  //   immutable: true,
-  //   validate: dniValidator,
-  //   unique: [true, 'DNI already registered']
-  // },
-  // expireDate: {
-  //   type: Date,
-  //   required: [true, 'Expire date is required']
-  // },
-  birthDate: {
-    type: Date
-    // required: [true, 'Birth date is required']
+  address: [addressSchema],
+  dni: {
+    type: String,
+    required: [true, 'DNI is required'],
+    immutable: true,
+    validate: dniValidator,
+    unique: [true, 'DNI already registered']
   },
-  // phone: {
-  //   type: String,
-  //   required: [true, 'Phone is required'],
-  //   validate: phoneValidator
-  // },
+  expireDate: {
+    type: Date,
+    required: [true, 'Expire date is required']
+  },
+  birthDate: {
+    type: Date,
+    required: [true, 'Birth date is required']
+  },
+  phone: {
+    type: String,
+    required: [true, 'Phone is required'],
+    validate: phoneValidator
+  },
   photo: {
     type: String
   },
@@ -79,6 +81,7 @@ const userSchema = new mongoose.Schema({
   studentData: {
     medCert: {
       type: String,
+      default: ''
     },
     testsDone: [{
       id: {
@@ -111,12 +114,13 @@ const userSchema = new mongoose.Schema({
     },
     teacher: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user'
+      ref: 'user',
     }
   },
   teacherData: {
     drivingLic: {
-      type: String
+      type: String,
+      default: ''
     },
     students: [{
       type: mongoose.Schema.Types.ObjectId,
