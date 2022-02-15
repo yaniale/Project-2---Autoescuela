@@ -48,7 +48,7 @@ function getTestStatistics(req, res) {
       if (object.id.toString() === req.params.id) { return true }
     })
     if (index !== -1) {
-      return res.status(200).json(arr[index])
+      return res.status(200).json({ maxScore: arr[index].maxScore, tries: arr[index].tries})
     } else {
       return res.status(400).send(`Test ${req.params.id} not found in your profile`)
     }
@@ -93,7 +93,7 @@ async function submitTest(req, res) {
         for (let i = 0; i < submit.length; i++) {
           if (submit[i] === answers[i]) {                                                                               //Resp. correcta
             test.correct++
-            results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `Correct! Your answer was ${answers[i]} - '${ansText[i]}'.` })
+            results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `Correct! Your answer was ${answers[i]} - '${ansText[i]}'.`, correct: true })
             const index = user.studentData.statistics.findIndex(object => { //Buscar dentro de las estadísticas si se han respondido preguntas de este topic previamente
               if (object.topic.toString() === topics[i].toString()) { return true }
             })
@@ -109,9 +109,9 @@ async function submitTest(req, res) {
             }
           } else if (submit[i] === '') {                                                                                  //Resp. en blanco
             test.answered--
-            results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `The correct answer was ${answers[i]} - '${ansText[i]}'.` })
+            results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `The correct answer was ${answers[i]} - '${ansText[i]}'.`, correct: false })
           } else {                                                                                                        //Resp. errónea
-            results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `The correct answer was ${answers[i]} - '${ansText[i]}'.` })
+            results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `The correct answer was ${answers[i]} - '${ansText[i]}'.`, correct: false })
             const index = user.studentData.statistics.findIndex(object => { //Buscar dentro de las estadísticas si se han respondido preguntas de este topic previamente
               if (object.topic.toString() === topics[i].toString()) { return true }
             })
