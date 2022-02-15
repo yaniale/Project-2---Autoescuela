@@ -6,19 +6,37 @@ async function getAllPractices(req, res) {
     if (res.locals.user.role === 'teacher') {
       if (Object.keys(req.query)[0] === 'date') {
         const day = Object.values(req.query)[0]
-        const teacherPractices = await DriveLessonModel.find( { teacher: res.locals.user.id, date: { $eq:day } })
-        if (teacherPractices.length === 0) {
-          res.status(200).send(`You don't have any scheduled lessons for ${day}, you can take the day off!`)
-        } else {
-          res.status(200).json(teacherPractices)
-        }
-      }else {
-        const teacherPractices = await DriveLessonModel.find( { teacher: res.locals.user.id })
-        res.status(200).json(teacherPractices)
+        await DriveLessonModel.find({ teacher: res.locals.user.id, date: { $eq: day } })
+          .populate('student teacher')
+          .then(lesson => {
+            if (lesson.length === 0) {
+              res.status(200).send(`You don't have any scheduled lessons for ${day}, you can take the day off!`)
+            } else {
+              const teacherPractices = lesson.map(teacherPractice => {
+                return { teacher: teacherPractice.teacher.name, student: teacherPractice.student.name, date: teacherPractice.date, bookSlot: teacherPractice.bookSlot }
+              })
+              res.status(200).json(teacherPractices)
+            }
+          })
+      } else {
+        await DriveLessonModel.find({ teacher: res.locals.user.id })
+          .populate('student teacher')
+          .then(lesson => {
+            const teacherPractices = lesson.map(teacherPractice => {
+              return { teacher: teacherPractice.teacher.name, student: teacherPractice.student.name, date: teacherPractice.date, bookSlot: teacherPractice.bookSlot }
+            })
+            res.status(200).json(teacherPractices)
+          })
       }
     } else if (res.locals.user.role === 'admin') {
-      const practices = await DriveLessonModel.find(req.query)
-      res.status(200).json(practices)
+      await DriveLessonModel.find(req.query)
+        .populate('student teacher')
+        .then(lesson => {
+          const practices = lesson.map(practice => {
+            return { teacher: practice.teacher.name, student: practice.student.name, date: practice.date, bookSlot: practice.bookSlot }
+          })
+          res.status(200).json(practices)
+        })
     }
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
@@ -43,7 +61,7 @@ async function deletePractice(req, res) {
       await DriveLessonModel.findByIdAndRemove(req.params.id)
       const teacher = await UserModel.findById(practice.teacher)
       const student = await UserModel.findById(practice.student)
-      
+
       teacher.teacherData.lessons = teacher.teacherData.lessons.filter(lesson => {
         return lesson.toString() !== practice.id
       })
