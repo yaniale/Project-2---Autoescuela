@@ -112,10 +112,10 @@ const userSchema = new mongoose.Schema({
         ref: 'driveLesson'
       }]
     },
-    teacher: [{
+    teacher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
-    }]
+    }
   },
   teacherData: {
     drivingLic: {
