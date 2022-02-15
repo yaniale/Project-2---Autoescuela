@@ -21,7 +21,7 @@ async function getOneTest(req, res) {
           list.push(question)
         })
       })
-      res.status(200).json(list)
+    res.status(200).json(list)
   } catch (error) {
     res.status(500).send(`Request error: ${error}`)
   }
@@ -34,7 +34,7 @@ function getTestStatistics(req, res) {
       if (object.id.toString() === req.params.id) { return true }
     })
     if (index !== -1) {
-      return res.status(200).json({ maxScore: arr[index].maxScore, tries: arr[index].tries})
+      return res.status(200).json({ maxScore: arr[index].maxScore, tries: arr[index].tries })
     } else {
       return res.status(400).send(`Test ${req.params.id} not found in your profile`)
     }
@@ -58,78 +58,114 @@ async function submitTest(req, res) {
     await TestModel.findById(req.params.id)
       .populate('questions')
       .then(test => {
-        const answers = test.questions.map(element => { //correct answers
+
+        const answers = test.questions.map(element => { //correct options array
           return element.answer
         })
-        const text = test.questions.map(element => {    //question text
+        const text = test.questions.map(element => {    //text for every question array
           return element.text
         })
-        const ansText = test.questions.map(element => { //answer text
+        const ansText = test.questions.map(element => { //text for every answer array
           const i = element.options.findIndex(option => {
             if (Object.keys(option)[0] === element.answer) { return true }
           })
           return element.options[i][element.answer]
         })
-        const topics = test.questions.map(element => {
+        const topics = test.questions.map(element => {  //topic corresponding to each question array
           return element.topic
         })
-        const submit = Object.values(req.body)      //Submitted answers
-        test.answered = submit.length
+
+        const submit = Object.values(req.body)      //Submitted answers array
+        test.answered = submit.length               //We initially asume the user answered every question, with no blanks
         const results = []
         const arr = user.studentData.statistics
+
         for (let i = 0; i < submit.length; i++) {
-          if (submit[i] === answers[i]) {           //Resp. correcta
-            test.correct++
-            results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `Correct! Your answer was ${answers[i]} - '${ansText[i]}'.`, correct: true })
-            const index = arr.findIndex(object => { //Buscar dentro de las estadísticas si se han respondido preguntas de este topic previamente
-              if (object.topic.toString() === topics[i].toString()) { return true }
-            })
-            if (index === -1) {
-              arr.push({ topic: topics[i] })
-              arr[arr.length-1].correct++
-              arr[arr.length-1].answered++
-              arr[arr.length-1].percentage = (arr[arr.length-1].correct / arr[arr.length-1].answered) * 100
-            } else {
-              arr[index].correct++
-              arr[index].answered++
-              arr[index].percentage = (arr[index].correct / arr[index].answered) * 100
-            }
-          } else if (submit[i] === '') {            //Resp. en blanco
-            test.answered--
-            results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `The correct answer was ${answers[i]} - '${ansText[i]}'.`, correct: false })
-          } else {                                  //Resp. errónea
-            results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `The correct answer was ${answers[i]} - '${ansText[i]}'.`, correct: false })
-            const index = arr.findIndex(object => { //Buscar dentro de las estadísticas si se han respondido preguntas de este topic previamente
-              if (object.topic.toString() === topics[i].toString()) { return true }
-            })
-            if (index === -1) {
-              arr.push({ topic: topics[i] })
-              arr[arr.length-1].answered++
-              arr[arr.length-1].percentage = (arr[arr.length-1].correct / arr[arr.length-1].answered) * 100
-            } else {
-              arr[index].answered++
-              arr[index].percentage = (arr[index].correct / arr[index].answered) * 100
-            }
+          if (submit[i] === answers[i]) {
+            correctAnswer(test, results, arr, i, text, answers, ansText, topics)
+          } else if (submit[i] === '') {
+            blankAnswer(test, results, i, text, answers, ansText)
+          } else {
+            wrongAnswer(test, results, arr, i, text, answers, ansText, topics)
           }
         }
+
         const arrTests = user.studentData.testsDone
-        const index = arrTests.findIndex(object => { //Buscar dentro de los tests realizados por el alumno si ya había hecho este test antes
+        const index = arrTests.findIndex(object => {          //Buscar si el alumno ya había hecho este test antes
           if (object.id.toString() === req.params.id) { return true }
         })
+
         if (index === -1) {
           arrTests.push({ id: req.params.id })                //Si no se había hecho el test antes, añadirlo a los test realizados
           arrTests[arrTests.length - 1].maxScore = test.correct //establecemos la puntación obtenida como maxScore
         } else {                                                //en caso de que el test ya se haya realizado previamente
-          test.correct > arrTests[index].maxScore ? arrTests[index].maxScore = test.correct : user //modificar puntuación máxima si se ha superado
+          test.correct > arrTests[index].maxScore ? arrTests[index].maxScore = test.correct : user //aumentar puntuación máxima
           arrTests[index].tries++                               // aumentar número de intentos
         }
+
         user.save()
-        test.percentage = (test.correct / answers.length) * 100
+
+        test.percentage = ((test.correct / answers.length) * 100).toFixed(2)
         res.status(200).json({ correct: test.correct, answered: test.answered, percentage: test.percentage, results })
       })
   } catch (error) {
     res.status(500).send(`Request error: ${error}`)
   }
+}
+
+function correctAnswer(test, results, arr, i, text, answers, ansText, topics) {
+  test.correct++
+  let isCorrect = true
+
+  results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `Correct! Your answer was ${answers[i]} - '${ansText[i]}'.`, correct: isCorrect })
+
+  const index = arr.findIndex(object => { //Buscar en estadísticas si se han respondido preguntas de este topic previamente
+    if (object.topic.toString() === topics[i].toString()) { return true }
+  })
+
+  if (index === -1) {
+    addNewTopic(arr, topics, i, isCorrect)
+  } else {
+    modifyTopic(arr, index, isCorrect)
+  }
+}
+
+function blankAnswer(test, results, i, text, answers, ansText) {
+  test.answered--
+  results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `The correct answer was ${answers[i]} - '${ansText[i]}'.`, correct: false })
+}
+
+function wrongAnswer(test, results, arr, i, text, answers, ansText, topics) {
+  let isCorrect = false
+
+  results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `The correct answer was ${answers[i]} - '${ansText[i]}'.`, correct: isCorrect })
+
+  const index = arr.findIndex(object => { //Buscar en estadísticas si se han respondido preguntas de este topic previamente
+    if (object.topic.toString() === topics[i].toString()) { return true }
+  })
+
+  if (index === -1) {
+    addNewTopic(arr, topics, i, isCorrect)
+  } else {
+    modifyTopic(arr, index, isCorrect)
+  }
+}
+
+function addNewTopic(arr, topics, i, isCorrect) {
+  arr.push({ topic: topics[i] })
+  if (isCorrect) {
+    arr[arr.length - 1].correct++
+  }
+  arr[arr.length - 1].answered++
+  arr[arr.length - 1].percentage = ((arr[arr.length - 1].correct / arr[arr.length - 1].answered) * 100).toFixed(2)
+}
+
+function modifyTopic(arr, index, isCorrect) {
+  if (isCorrect) {
+    arr[index].correct++
+  }
+  arr[index].answered++
+  arr[index].percentage = ((arr[index].correct / arr[index].answered) * 100).toFixed(2)
 }
 
 async function updateTest(req, res) {
