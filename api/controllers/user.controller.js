@@ -94,6 +94,13 @@ async function deleteUser(req, res) {
 async function assignTeacher(req, res) {
   try {
     const student = await UserModel.findById(req.params.studentId)
+    if (student.studentData.teacher) {           //Si el alumno ya tenía un profesor asignado, quitamos el alumno a dicho profesor
+      let changeTeacher = await UserModel.findById(student.studentData.teacher)
+      changeTeacher.teacherData.students = changeTeacher.teacherData.students.filter(element => {
+        return element.toString() !== student.id
+      })
+      await changeTeacher.save()
+    }
     const teacher = await UserModel.findById(req.params.teacherId)
     student.studentData.teacher = req.params.teacherId
     teacher.teacherData.students.push(student.id)
