@@ -17,32 +17,6 @@ METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | POST PARAM
 POST   | /auth/signup     | YES   | Admin| |User Signup              | `name`, `lastName`, `email`, `password`, `address`, `dni`, `expireDate`,`birthDate`, `phone`  | `token`
 POST   | /auth/login      | -     | |User Login               | `email`, `password`                             | `token`
 
-AUTH
-This collection contains all functions related to register and log in users.
-
-POST
-Signup
-http://localhost:3000/api/auth/signup
-signUp allows only admin users to register any new user.
-
-The compulsory fields on user creation are:
-
-- name
-- lastName
-- email
-- password
-- dni
-- expireDate
-- birthDate
-- phone
-- role
-- 
-Once it's successfully signed up, it will show the message:
-
-"user.name`s profile successfully created!"
-
-Request Headers: token
-
 ### User Endpoints
 METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | POST PARAMS                                     | RETURNS
 -------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
