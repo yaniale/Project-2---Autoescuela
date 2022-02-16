@@ -10,7 +10,7 @@ All API Request must be prepended with `/api/`
 
 The Authentication flow for the application is:
 
-- Step 1. User Signup/Login
+### User Signup/Login
 
 METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | POST PARAMS                                     | RETURNS
 -------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
