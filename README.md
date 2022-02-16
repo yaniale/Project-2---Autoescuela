@@ -10,12 +10,59 @@ All API Request must be prepended with `/api/`
 
 The Authentication flow for the application is:
 
-- Step 1. User Signup/Login
+### User Signup/Login
 
 METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | POST PARAMS                                     | RETURNS
 -------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
 POST   | /auth/signup     | YES   | Admin| |User Signup              | `name`, `lastName`, `email`, `password`, `address`, `dni`, `expireDate`,`birthDate`, `phone`  | `token`
 POST   | /auth/login      | -     | |User Login               | `email`, `password`                             | `token`
+
+AUTH
+This collection contains all functions related to register and log in users.
+
+POST
+Signup
+http://localhost:3000/api/auth/signup
+signUp allows only admin users to register any new user.
+
+The compulsory fields on user creation are:
+
+- name
+- lastName
+- email
+- password
+- dni
+- expireDate
+- birthDate
+- phone
+- role
+- 
+Once it's successfully signed up, it will show the message:
+
+"user.name`s profile successfully created!"
+
+Request Headers: token
+
+Example:
+{
+    "name": "Mr Teacher",
+    "lastName": "Teachsalot",
+    "email": "te@cher.com",
+    "password": "333",
+    "address": [{
+        "street": "Fantasy Road",
+        "number": "666",
+        "flat": "",
+        "door": "",
+        "postalCode": "35099"
+    }],
+    "role": "teacher",
+    "dni": "11223344F",
+    "expireDate": "11/01/2024",
+    "birthDate": "04/30/1960",
+    "phone": "928112233",
+    "photo": "chuck2.jpg"
+}
 
 ### User Endpoints
 METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | POST PARAMS                                     | RETURNS
