@@ -59,53 +59,32 @@ async function submitTest(req, res) {
       .populate('questions')
       .then(test => {
 
-        const answers = test.questions.map(element => { //correct options array
-          return element.answer
-        })
-        const text = test.questions.map(element => {    //text for every question array
-          return element.text
-        })
-        const ansText = test.questions.map(element => { //text for every answer array
-          const i = element.options.findIndex(option => {
-            if (Object.keys(option)[0] === element.answer) { return true }
-          })
-          return element.options[i][element.answer]
-        })
-        const topics = test.questions.map(element => {  //topic corresponding to each question array
-          return element.topic
-        })
+        const content = getContent(test)
 
-        const submit = Object.values(req.body)      //Submitted answers array
-        test.answered = submit.length               //We initially asume the user answered every question, with no blanks
+        const submit = Object.values(req.body)      
+        test.answered = submit.length
+
         const results = []
         const arr = user.studentData.statistics
 
         for (let i = 0; i < submit.length; i++) {
-          if (submit[i] === answers[i]) {
-            correctAnswer(test, results, arr, i, text, answers, ansText, topics)
+          if (submit[i] === content.answers[i]) {
+            correctAnswer(test, results, arr, i, content)
           } else if (submit[i] === '') {
-            blankAnswer(test, results, i, text, answers, ansText)
+            blankAnswer(test, results, i, content)
           } else {
-            wrongAnswer(test, results, arr, i, text, answers, ansText, topics)
+            wrongAnswer(test, results, arr, i, content)
           }
         }
 
         const arrTests = user.studentData.testsDone
-        const index = arrTests.findIndex(object => {          //Buscar si el alumno ya había hecho este test antes
-          if (object.id.toString() === req.params.id) { return true }
-        })
-
-        if (index === -1) {
-          arrTests.push({ id: req.params.id })                //Si no se había hecho el test antes, añadirlo a los test realizados
-          arrTests[arrTests.length - 1].maxScore = test.correct //establecemos la puntación obtenida como maxScore
-        } else {                                                //en caso de que el test ya se haya realizado previamente
-          test.correct > arrTests[index].maxScore ? arrTests[index].maxScore = test.correct : user //aumentar puntuación máxima
-          arrTests[index].tries++                               // aumentar número de intentos
-        }
+        const index = getIndex(arrTests, req)
+        
+        updateStatistics(arrTests, req, test, user, index)
 
         user.save()
 
-        test.percentage = ((test.correct / answers.length) * 100).toFixed(2)
+        test.percentage = ((test.correct / content.answers.length) * 100).toFixed(2)
         res.status(200).json({ correct: test.correct, answered: test.answered, percentage: test.percentage, results })
       })
   } catch (error) {
@@ -113,39 +92,75 @@ async function submitTest(req, res) {
   }
 }
 
-function correctAnswer(test, results, arr, i, text, answers, ansText, topics) {
+function getIndex(arrTests, req) {
+  const index = arrTests.findIndex(object => { 
+    if (object.id.toString() === req.params.id) { return true }
+  })
+  return index
+}
+
+function updateStatistics(arrTests, req, test, user, index) {
+  if (index === -1) {
+    arrTests.push({ id: req.params.id })                
+    arrTests[arrTests.length - 1].maxScore = test.correct
+  } else {   
+    test.correct > arrTests[index].maxScore ? arrTests[index].maxScore = test.correct : user 
+    arrTests[index].tries++                   
+  }
+}
+
+function getContent(test) {
+  const answers = test.questions.map(element => {
+    return element.answer
+  })
+  const text = test.questions.map(element => {   
+    return element.text
+  })
+  const ansText = test.questions.map(element => {
+    const i = element.options.findIndex(option => {
+      if (Object.keys(option)[0] === element.answer) { return true }
+    })
+    return element.options[i][element.answer]
+  })
+  const topics = test.questions.map(element => { 
+    return element.topic
+  })
+  return ({ answers:answers, text:text, ansText:ansText, topics:topics })
+}
+
+function correctAnswer(test, results, arr, i, content) {
   test.correct++
   let isCorrect = true
 
-  results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `Correct! Your answer was ${answers[i]} - '${ansText[i]}'.`, correct: isCorrect })
+  results.push({ question: `Question ${i + 1} - '${content.text[i]}'`, answer: `Correct! Your answer was ${content.answers[i]} - '${content.ansText[i]}'.`, correct: isCorrect })
 
   const index = arr.findIndex(object => { //Buscar en estadísticas si se han respondido preguntas de este topic previamente
-    if (object.topic.toString() === topics[i].toString()) { return true }
+    if (object.topic.toString() === content.topics[i].toString()) { return true }
   })
 
   if (index === -1) {
-    addNewTopic(arr, topics, i, isCorrect)
+    addNewTopic(arr, content.topics, i, isCorrect)
   } else {
     modifyTopic(arr, index, isCorrect)
   }
 }
 
-function blankAnswer(test, results, i, text, answers, ansText) {
+function blankAnswer(test, results, i, content) {
   test.answered--
-  results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `The correct answer was ${answers[i]} - '${ansText[i]}'.`, correct: false })
+  results.push({ question: `Question ${i + 1} - '${content.text[i]}'`, answer: `The correct answer was ${content.answers[i]} - '${content.ansText[i]}'.`, correct: false })
 }
 
-function wrongAnswer(test, results, arr, i, text, answers, ansText, topics) {
+function wrongAnswer(test, results, arr, i, content) {
   let isCorrect = false
 
-  results.push({ question: `Question ${i + 1} - '${text[i]}'`, answer: `The correct answer was ${answers[i]} - '${ansText[i]}'.`, correct: isCorrect })
+  results.push({ question: `Question ${i + 1} - '${content.text[i]}'`, answer: `The correct answer was ${content.answers[i]} - '${content.ansText[i]}'.`, correct: isCorrect })
 
   const index = arr.findIndex(object => { //Buscar en estadísticas si se han respondido preguntas de este topic previamente
-    if (object.topic.toString() === topics[i].toString()) { return true }
+    if (object.topic.toString() === content.topics[i].toString()) { return true }
   })
 
   if (index === -1) {
-    addNewTopic(arr, topics, i, isCorrect)
+    addNewTopic(arr, content.topics, i, isCorrect)
   } else {
     modifyTopic(arr, index, isCorrect)
   }
