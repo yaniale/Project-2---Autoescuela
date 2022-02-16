@@ -43,27 +43,6 @@ Once it's successfully signed up, it will show the message:
 
 Request Headers: token
 
-Example:
-{
-    "name": "Mr Teacher",
-    "lastName": "Teachsalot",
-    "email": "te@cher.com",
-    "password": "333",
-    "address": [{
-        "street": "Fantasy Road",
-        "number": "666",
-        "flat": "",
-        "door": "",
-        "postalCode": "35099"
-    }],
-    "role": "teacher",
-    "dni": "11223344F",
-    "expireDate": "11/01/2024",
-    "birthDate": "04/30/1960",
-    "phone": "928112233",
-    "photo": "chuck2.jpg"
-}
-
 ### User Endpoints
 METHOD | ENDPOINT         | TOKEN | ROLE | DESCRIPTION              | POST PARAMS                                     | RETURNS
 -------|------------------|-------|------|--------------------|-------------------------------------------------|--------------------
