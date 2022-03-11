@@ -1,5 +1,5 @@
 # Project 2 - Autoescuela
-Proyecto 2 de Reboot Academy- Bloque Backend
+Proyect 2 for Reboot Academy - Backend Block
 
 ## API Endpoints
 
