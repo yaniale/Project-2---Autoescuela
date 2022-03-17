@@ -58,8 +58,8 @@ async function getUserDriveLic(req, res) {
   try {
     const user = await UserModel.findById(req.params.id)
     const license = user.teacherData.drivingLic
-    if(!license) return res.status(400).send('No Driving License')
-    res.status(200).sendFile(license, {root: 'public/driv-lic'})
+    if (!license) return res.status(400).send('No Driving License')
+    res.status(200).sendFile(license, { root: 'public/driv-lic' })
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
   }
@@ -161,8 +161,8 @@ function getMyMedCert(req, res) {
 function getMyDrivingLic(req, res) {
   try {
     const license = res.locals.user.teacherData.drivingLic
-    if(!license) return res.status(400).send('No Driving License added')
-    res.status(200).sendFile(license, {root: 'public/driv-lic'})
+    if (!license) return res.status(400).send('No Driving License added')
+    res.status(200).sendFile(license, { root: 'public/driv-lic' })
   } catch (error) {
     res.status(500).send(`Request error: ${error}`)
   }
@@ -191,8 +191,7 @@ async function createPractice(req, res) {
 
     const bookedPractices = await DriveLessonModel.find({ date: req.body.date, bookSlot: req.body.bookSlot, teacher: teacher })
     if (bookedPractices.length === 0) {
-      const lesson = { student: student.id, teacher: teacher, date: req.body.date, bookSlot: req.body.bookSlot }
-      const practice = await DriveLessonModel.create(lesson)
+      const practice = createPractice(student, teacher, req)
 
       student.studentData.driveLessons.lessons.push(practice.id)
       student.save()
@@ -203,14 +202,9 @@ async function createPractice(req, res) {
 
       res.status(200).json({ message: `You've booked a driving lesson!`, practice })
     } else {
-      const dayPractices = await DriveLessonModel.find({ date: req.body.date, teacher: teacher })
-      const booked = dayPractices.map(practice => {
-        return practice.bookSlot
-      })
-      const arr = ["9:00", "10:00","11:00","12:00","13:00","16:00","17:00","18:00"]
-      const free = arr.filter(hour => {
-        return booked.indexOf(hour) === -1
-      })
+      const booked = findDayPractices(req, teacher)
+      const free = checkHours(booked)
+
       if (free.length > 0) {
         res.status(200).send(`The teacher is busy!!! Available hours for this date are: ${free}`)
       } else {
@@ -220,6 +214,28 @@ async function createPractice(req, res) {
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
   }
+}
+
+async function createPractice(student, teacher, req) {
+  const lesson = { student: student.id, teacher: teacher, date: req.body.date, bookSlot: req.body.bookSlot }
+  const practice = await DriveLessonModel.create(lesson)
+  return practice
+}
+
+async function findDayPractices(req, teacher) {
+  const dayPractices = await DriveLessonModel.find({ date: req.body.date, teacher: teacher })
+  const booked = dayPractices.map(practice => {
+    return practice.bookSlot
+  })
+  return booked
+}
+
+function checkHours(booked) {
+  const arr = ["9:00", "10:00", "11:00", "12:00", "13:00", "16:00", "17:00", "18:00"]
+  const free = arr.filter(hour => {
+    return booked.indexOf(hour) === -1
+  })
+  return free
 }
 
 async function getMyPractices(req, res) {
