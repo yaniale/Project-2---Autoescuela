@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const questionSchema = new mongoose.Schema({
-  text: {
+  question: {
     type: String,
     required: [true, 'Text is required']
   },
@@ -12,7 +12,7 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Answer is required']
   },
-  options: [{}],      
+  options: [{}],
   topic: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'topic',

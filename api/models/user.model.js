@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const validate = require('mongoose-validator')
 
 
-var mailValidator =[
+var mailValidator = [
   validate({
     validator: 'isEmail',
     message: 'Invalid email format'
@@ -19,7 +19,7 @@ var phoneValidator = [
 var dniValidator = [
   validate({
     validator: v => {
-      return/[0-9]{8}[a-z]/i.test(v)
+      return /[0-9]{8}[a-z]/i.test(v)
     },
     message: 'Invalid email format'
   })
@@ -95,6 +95,17 @@ const userSchema = new mongoose.Schema({
       tries: {
         type: Number,
         default: 1
+      }
+    }],
+    topicDone: [{
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'topic'
+      },
+      status: {
+        type: String,
+        enum: ['complete', 'incomplete'],
+        default: 'incomplete'
       }
     }],
     statistics: [statisticsSchema],
