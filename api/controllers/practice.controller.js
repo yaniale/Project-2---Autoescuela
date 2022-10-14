@@ -13,7 +13,7 @@ async function getAllPractices(req, res) {
               res.status(200).send(`You don't have any scheduled lessons for ${day}, you can take the day off!`)
             } else {
               const teacherPractices = lesson.map(teacherPractice => {
-                return { teacher: teacherPractice.teacher.name, student: teacherPractice.student.name, date: teacherPractice.date, bookSlot: teacherPractice.bookSlot }
+                return { teacher: teacherPractice.teacher.name, student: teacherPractice.student.name, studentLastName: teacherPractice.student.lastName, date: teacherPractice.date, bookSlot: teacherPractice.bookSlot, finishTime: teacherPractice.finishTime, startKm: teacherPractice.startKm, finishKm: teacherPractice.finishKm, comments: teacherPractice.comments }
               })
               res.status(200).json(teacherPractices)
             }
@@ -23,7 +23,7 @@ async function getAllPractices(req, res) {
           .populate('student teacher')
           .then(lesson => {
             const teacherPractices = lesson.map(teacherPractice => {
-              return { teacher: teacherPractice.teacher.name, student: teacherPractice.student.name, date: teacherPractice.date, bookSlot: teacherPractice.bookSlot }
+              return { teacher: teacherPractice.teacher.name, student: teacherPractice.student.name, studentLastName: teacherPractice.student.lastName, date: teacherPractice.date, bookSlot: teacherPractice.bookSlot, finishTime: teacherPractice.finishTime, startKm: teacherPractice.startKm, finishKm: teacherPractice.finishKm, comments: teacherPractice.comments }
             })
             res.status(200).json(teacherPractices)
           })
@@ -33,7 +33,7 @@ async function getAllPractices(req, res) {
         .populate('student teacher')
         .then(lesson => {
           const practices = lesson.map(practice => {
-            return { teacher: practice.teacher.name, student: practice.student.name, date: practice.date, bookSlot: practice.bookSlot }
+            return { teacher: practice.teacher.name, student: practice.student.name, studentLastName: practice.student.lastName, date: practice.date, bookSlot: practice.bookSlot, finishTime: practice.finishTime }
           })
           res.status(200).json(practices)
         })

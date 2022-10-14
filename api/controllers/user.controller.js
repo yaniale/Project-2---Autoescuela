@@ -191,7 +191,7 @@ async function createPractice(req, res) {
 
     const bookedPractices = await DriveLessonModel.find({ date: req.body.date, bookSlot: req.body.bookSlot, teacher: teacher })
     if (bookedPractices.length === 0) {
-      const practice = createPractice(student, teacher, req)
+      const practice = createLesson(student, teacher, req)
 
       student.studentData.driveLessons.lessons.push(practice.id)
       student.save()
@@ -211,12 +211,13 @@ async function createPractice(req, res) {
         res.status(200).send('Sorry, currently there are no more slots available for this date')
       }
     }
+
   } catch (error) {
     res.status(500).send(`Request Error: ${error}`)
   }
 }
 
-async function createPractice(student, teacher, req) {
+async function createLesson(student, teacher, req) {
   const lesson = { student: student.id, teacher: teacher, date: req.body.date, bookSlot: req.body.bookSlot }
   const practice = await DriveLessonModel.create(lesson)
   return practice

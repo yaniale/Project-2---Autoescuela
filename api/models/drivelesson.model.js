@@ -3,17 +3,17 @@ const mongoose = require('mongoose')
 const driveLessonSchema = new mongoose.Schema({
   student: {
     type: mongoose.Schema.Types.ObjectId,
-    ref:'user',
+    ref: 'user',
     required: true
   },
   teacher: {
     type: mongoose.Schema.Types.ObjectId,
-    ref:'user',
+    ref: 'user',
     required: true
   },
   bookSlot: {
     type: String,
-    enum: ["9:00", "10:00","11:00","12:00","13:00","16:00","17:00","18:00"],
+    enum: ["09:00", "10:00", "11:00", "12:00", "13:00", "16:00", "17:00", "18:00", "19:00", "20:00"],
     required: [true, 'You have to select a time slot']
   },
   finishTime: {
